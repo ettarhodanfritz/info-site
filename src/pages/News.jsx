@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 
-const AFRICA_API =
-  "https://newsapi.org/v2/top-headlines?category=general&country=ng&apiKey=YOUR_API_KEY";
-const WORLD_API =
-  "https://newsapi.org/v2/top-headlines?category=general&language=en&apiKey=YOUR_API_KEY";
+//const AFRICA_API =
+ // "https://newsapi.org/v2/top-headlines?category=general&country=ng&apiKey=YOUR_API_KEY";
+//const WORLD_API =
+  // "https://newsapi.org/v2/top-headlines?category=general&language=en&apiKey=YOUR_API_KEY";
 
-const Home = () => {
-  const [africaNews, setAfricaNews] = useState([]);
-  const [worldNews, setWorldNews] = useState([]);
+//const Home = () => {
+  //const [africaNews, setAfricaNews] = useState([]);
+ // const [worldNews, setWorldNews] = useState([]); //
 
   // Default placeholders if API fails
   const defaultAfrica = [

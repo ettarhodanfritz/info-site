@@ -8,6 +8,7 @@ import News from "./pages/News";
 import LiveTv from "./pages/LiveTv";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
+import NewsDetails from "./pages/NewsDetails";
 
 // Components
 import Navbar from "./pages/Navbar";
@@ -18,7 +19,7 @@ function App() {
     // Setup Intersection Observer for scroll animations
     const observerOptions = {
       threshold: 0.1,
-      rootMargin: "0px 0px -100px 0px"
+      rootMargin: "0px 0px -100px 0px",
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -60,9 +61,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<News />} />
+        <Route path="/news/:id" element={<NewsDetails />} />{" "}
+        {/* <-- Added Details page */}
         <Route path="/live" element={<LiveTv />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={<Admin />} /> {/* <-- Fixed stray < */}
       </Routes>
 
       {/* Footer always visible */}

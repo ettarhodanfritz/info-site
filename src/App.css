@@ -1043,3 +1043,30 @@ body {
     flex: 0 0 250px;
   }
 }
+
+/* Live TV spacing & centering fixes */
+
+.live-tv-main {
+  padding: 70px 20px 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.live-tv-main h1 {
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.live-tv-main p {
+  margin-bottom: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* Space between heading area and slider */
+.tv-scroll-container {
+  padding-bottom: 10px;
+}

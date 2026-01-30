@@ -945,3 +945,101 @@ body {
     flex: 0 0 250px; /* smaller cards on mobile */
   }
 }
+
+.scroll-container {
+  overflow-x: auto; /* allows swipe */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+.scroll-content {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  min-width: max-content; /* ensures full width for all cards */
+  animation: scroll-left 30s linear infinite;
+}
+
+.scroll-container:hover .scroll-content,
+.scroll-container:active .scroll-content {
+  animation-play-state: paused; /* stops auto-scroll on touch */
+}
+
+.news-card-horizontal {
+  flex: 0 0 300px; /* fixed width */
+  background-color: #34495e;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .news-card-horizontal {
+    flex: 0 0 250px; /* smaller cards on mobile */
+  }
+}
+
+.news-card-horizontal {
+  flex: 0 0 300px; /* fixed width */
+  background-color: #34495e;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column; /* stack items vertically */
+  justify-content: space-between; /* space between top (image/text) and button */
+  gap: 10px; /* spacing between items */
+}
+
+.news-card-horizontal img,
+.news-card-horizontal video {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  object-fit: cover; /* keeps images consistent */
+}
+
+.news-card-horizontal h3 {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: #ecf0f1;
+}
+
+.news-card-horizontal p {
+  margin-bottom: 5px;
+  color: #bdc3c7;
+  line-height: 1.4;
+}
+
+.news-card-horizontal .news-meta {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.news-card-horizontal a {
+  align-self: flex-start; /* button at bottom-left */
+  margin-top: auto; /* pushes it down if content grows */
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.news-card-horizontal a:hover {
+  background-color: #0056b3;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .news-card-horizontal {
+    flex: 0 0 250px;
+  }
+}

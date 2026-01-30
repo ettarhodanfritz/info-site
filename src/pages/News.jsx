@@ -62,7 +62,7 @@ const defaultWorld = [
     description: "World leaders meet to discuss climate action.",
     date: "2026-01-30",
     category: "Environment",
-    imageUrl: "./images/climate.jpg",
+    imageUrl: "/images/climate.jpg",
     videoUrl: "",
     content: "Full article about the global climate summit...",
   },
@@ -108,6 +108,40 @@ const defaultWorld = [
   },
 ];
 
+const NewsCard = ({ news }) => (
+  <article className="news-card-horizontal">
+    {news.imageUrl && (
+      <img src={news.imageUrl} alt={news.title} className="news-image" />
+    )}
+    <h3>{news.title}</h3>
+    <p>{news.description}</p>
+    <p className="news-meta">
+      {news.date} • {news.category}
+    </p>
+    {news.videoUrl && (
+      <video controls className="news-video">
+        <source src={news.videoUrl} type="video/mp4" />
+      </video>
+    )}
+    <Link to={`/news/${news.id}`}>Read More</Link>
+  </article>
+);
+
+const ScrollableNews = ({ newsArray }) => {
+  // Duplicate array for seamless scroll
+  const combined = [...newsArray, ...newsArray];
+
+  return (
+    <div className="scroll-container">
+      <div className="scroll-content">
+        {combined.map((news, idx) => (
+          <NewsCard key={`${news.id}-${idx}`} news={news} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const News = () => {
   const [africaNews, setAfricaNews] = useState([]);
   const [worldNews, setWorldNews] = useState([]);
@@ -117,48 +151,16 @@ const News = () => {
     setWorldNews(defaultWorld);
   }, []);
 
-  const africaLoop = [...africaNews, ...africaNews];
-  const worldLoop = [...worldNews, ...worldNews];
-
-  const renderNewsCard = (news, idx) => (
-    <article
-      key={`${news.id}-${idx}`}
-      className="news-card-horizontal animate-in slide-left"
-    >
-      {news.imageUrl && news.imageUrl.trim() !== "" && (
-        <img src={news.imageUrl} alt={news.title} className="news-image" />
-      )}
-
-      <h3>{news.title}</h3>
-      <p>{news.description}</p>
-      <p className="news-meta">
-        {news.date} • {news.category}
-      </p>
-
-      {news.videoUrl && news.videoUrl.trim() !== "" && (
-        <video controls className="news-video">
-          <source src={news.videoUrl} type="video/mp4" />
-        </video>
-      )}
-
-      <Link to={`/news/${news.id}`}>Read More</Link>
-    </article>
-  );
-
   return (
     <main>
       <section className="news-section" id="africa-news">
         <h2>Africa News</h2>
-        <div className="news-cards-horizontal">
-          {africaLoop.map(renderNewsCard)}
-        </div>
+        <ScrollableNews newsArray={africaNews} />
       </section>
 
       <section className="news-section" id="world-news">
         <h2>World News</h2>
-        <div className="news-cards-horizontal">
-          {worldLoop.map(renderNewsCard)}
-        </div>
+        <ScrollableNews newsArray={worldNews} />
       </section>
     </main>
   );

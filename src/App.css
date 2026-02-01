@@ -10,7 +10,7 @@
 body {
   font-family: "Segoe UI", sans-serif;
   line-height: 1.6;
-  background-color: #2c3e50;
+  background-color: #333;
   color: #ecf0f1;
 }
 
@@ -21,7 +21,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #003366;
+  /*background-color: #003366;*/
+  background-color: #1e90ff;
   padding: 15px 30px;
   color: #ffffff;
   position: sticky;
@@ -96,7 +97,7 @@ body {
   background:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
     url("../public/images/hero-bg.jpg") center/cover no-repeat;
-  color: #ecf0f1;
+  color: #ffffff;
   text-align: center;
   padding: 120px 20px;
 }
@@ -112,7 +113,7 @@ body {
 }
 
 #hero a {
-  background-color: #0056b3;
+  background-color: #1e90ff;
   color: #ffffff;
   padding: 12px 30px;
   border-radius: 8px;
@@ -153,8 +154,9 @@ body {
   padding: 60px 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background-color: #2c3e50;
-  color: #ecf0f1;
+  /*background-color: #2c3e50;*/
+  background-color: #333;
+  color: #0056b3;
 }
 
 .news-section h2 {
@@ -162,7 +164,7 @@ body {
   text-align: center;
   margin-bottom: 50px;
   position: relative;
-  color: #ecf0f1;
+  color: #ffffff;
 }
 
 .news-section h2::after {
@@ -183,7 +185,7 @@ body {
 }
 
 .news-card {
-  background: #34495e;
+  background: #333;
   width: 300px;
   padding: 20px;
   border-radius: 12px;
@@ -205,16 +207,16 @@ body {
 .news-card h3 {
   margin-bottom: 10px;
   font-size: 1.3rem;
-  color: #ecf0f1;
+  color: #ffffff;
 }
 
 .news-card p {
   margin-bottom: 15px;
-  color: #bdc3c7;
+  color: #ffffff;
 }
 
 .news-card a {
-  color: #0056b3;
+  color: #1e90ff;
   font-weight: bold;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -227,7 +229,7 @@ body {
   content: "›";
   position: absolute;
   left: 0;
-  color: #0056b3;
+  color: #1e90ff;
   opacity: 0;
   transform: translateX(-10px);
   transition: all 0.3s ease;
@@ -268,7 +270,7 @@ body {
 }
 
 #live-tv a {
-  background-color: #0056b3;
+  background-color: #1e90ff;
   color: #ffffff;
   padding: 12px 30px;
   border-radius: 8px;
@@ -306,7 +308,7 @@ body {
    CONTACT SECTION
    ========================= */
 #contact {
-  background-color: #34495e;
+  background-color: #333;
   color: #ecf0f1;
   text-align: center;
   padding: 100px 20px;
@@ -315,17 +317,17 @@ body {
 #contact h2 {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #ecf0f1;
+  color: #ffffff;
 }
 
 #contact p {
   font-size: 1.1rem;
   margin-bottom: 30px;
-  color: #bdc3c7;
+  color: #ffffff;
 }
 
 #contact a {
-  background-color: #0056b3;
+  background-color: #1e90ff;
   color: #ffffff;
   padding: 12px 30px;
   border-radius: 8px;

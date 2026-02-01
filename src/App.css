@@ -12,8 +12,13 @@ body {
   line-height: 1.6;
   background-color: #333;
   color: #ecf0f1;
+  padding-bottom: env(safe-area-insert-bottom) html;
 }
 
+body {
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
 /* =========================
    NAVBAR
    ========================= */

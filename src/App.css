@@ -237,7 +237,7 @@ body {
 }
 
 .news-card a:hover {
-  color: #003d82;
+  color: #1e90ff;
   padding-left: 20px;
 }
 
@@ -667,7 +667,7 @@ body {
 }
 
 .news-card button {
-  background-color: #0056b3;
+  background-color: #1e90ff;
   color: #fff;
   padding: 12px 20px;
   border-radius: 8px;
@@ -743,7 +743,7 @@ body {
 /* Apply Home-style buttons to Read More links inside news cards */
 .news-card a,
 .news-card-horizontal a {
-  background-color: #0056b3;
+  background-color: #1e90ff;
   color: #ffffff;
   padding: 12px 30px;
   border-radius: 8px;

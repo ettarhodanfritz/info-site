@@ -96,37 +96,7 @@ const NewsDetails = () => {
       </Link>
     </main>
   );
-  return (
-    <main className="news-details animate-in slide-left">
-      <h1>{news.title}</h1>
-      <p className="news-meta">
-        {new Date(news.date).toLocaleDateString()}  2 {news.category}
-      </p>
-
-      {news.imageUrl && (
-        <img
-          src={`${baseURL}${news.imageUrl}`}
-          alt={news.title}
-          style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
-        />
-      )}
-
-      {news.videoUrl && (
-        <video
-          controls
-          style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
-        >
-          <source src={`${baseURL}${news.videoUrl}`} type="video/mp4" />
-        </video>
-      )}
-
-      <p>{news.content}</p>
-
-      <Link to="/news" style={{ display: "inline-block", marginTop: "20px" }}>
-        2 190 {t("news")}
-      </Link>
-    </main>
-  );
+  // Removed unreachable second return block
 };
 
 export default NewsDetails;

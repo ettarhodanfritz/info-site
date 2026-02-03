@@ -1,8 +1,10 @@
 // src/pages/LiveTV.jsx
-import React from "react";
-import "../App.css";
 
-const liveChannels = [
+import React, { useEffect, useState } from "react";
+import "../App.css";
+import { useI18n } from "../i18n";
+
+const baseChannels = [
   {
     id: "ddnews",
     name: "DD News 24x7",
@@ -21,15 +23,53 @@ const liveChannels = [
   },
 ];
 
+
 const LiveTV = () => {
+  const { t } = useI18n();
+  const [translatedChannels, setTranslatedChannels] = useState(baseChannels);
+  const [translatedTitle, setTranslatedTitle] = useState(t("liveTv") || "Live TV");
+  const [translatedSelect, setTranslatedSelect] = useState(t("selectChannel") || "Select a channel");
+
+  async function translateText(text, targetLang, sourceLang = "auto") {
+    const response = await fetch("https://libretranslate.com/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        q: text,
+        source: sourceLang,
+        target: targetLang,
+        format: "text"
+      }),
+    });
+    const data = await response.json();
+    return data.translatedText;
+  }
+
+  useEffect(() => {
+    if (t("language") === "en") {
+      setTranslatedChannels(baseChannels);
+      setTranslatedTitle(t("liveTv") || "Live TV");
+      setTranslatedSelect(t("selectChannel") || "Select a channel");
+      return;
+    }
+    const doTranslate = async () => {
+      setTranslatedTitle(await translateText(t("liveTv") || "Live TV", t("language")));
+      setTranslatedSelect(await translateText(t("selectChannel") || "Select a channel", t("language")));
+      const names = await Promise.all(baseChannels.map(c => translateText(c.name, t("language"))));
+      setTranslatedChannels(baseChannels.map((c, i) => ({ ...c, name: names[i] })));
+    };
+    doTranslate();
+    // eslint-disable-next-line
+  }, [t("language")]);
+
   return (
     <main className="live-tv-main">
-      <h1>🌍 Live News TV</h1>
-      <p>Select a channel below to watch live news.</p>
+      <h1>🌍 {translatedTitle}</h1>
+      <p>{translatedSelect}</p>
 
       <div className="scroll-container">
         <div className="scroll-content">
-          {liveChannels.map((channel) => (
+          {translatedChannels.map((channel) => (
             <div key={channel.id} className="live-tv-card">
               <h2>{channel.name}</h2>
               <div className="video-container">
@@ -44,7 +84,7 @@ const LiveTV = () => {
             </div>
           ))}
           {/* Duplicate cards for seamless infinite scroll */}
-          {liveChannels.map((channel) => (
+          {translatedChannels.map((channel) => (
             <div key={channel.id + "-clone"} className="live-tv-card">
               <h2>{channel.name}</h2>
               <div className="video-container">

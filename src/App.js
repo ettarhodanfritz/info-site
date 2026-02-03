@@ -1,7 +1,13 @@
 // src/App.js
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
+
 // Pages
 import Home from "./pages/Home";
 import News from "./pages/News";
@@ -9,14 +15,19 @@ import LiveTv from "./pages/LiveTv";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 import NewsDetails from "./pages/NewsDetails";
+import ApproveNews from "./pages/ApproveNews";
 
 // Components
 import Navbar from "./pages/Navbar";
 import Footer from "./pages/Footer";
 
-function App() {
+// Scroll animations wrapper for non-admin pages
+const ScrollAnimations = () => {
+  const location = useLocation();
+
   useEffect(() => {
-    // Setup Intersection Observer for scroll animations
+    if (location.pathname === "/admin") return; // Skip admin page completely
+
     const observerOptions = {
       threshold: 0.1,
       rootMargin: "0px 0px -100px 0px",
@@ -50,26 +61,42 @@ function App() {
       sections.forEach((section) => observer.unobserve(section));
       newsCards.forEach((card) => observer.unobserve(card));
     };
-  }, []);
+  }, [location]);
+
+  return null;
+};
+
+const AppWrapper = () => {
+  const location = useLocation();
+  const isAdmin = location.pathname === "/admin";
+  const isApprove = location.pathname === "/approve-news";
 
   return (
-    <Router>
-      {/* Navbar always visible */}
-      <Navbar />
+    <>
+      {/* Only show Navbar & Footer on non-admin pages */}
+      {!isAdmin && !isApprove && <Navbar />}
+      {!isAdmin && !isApprove && <ScrollAnimations />}
 
-      {/* Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<News />} />
-        <Route path="/news/:id" element={<NewsDetails />} />{" "}
-        {/* <-- Added Details page */}
+        <Route path="/news/:id" element={<NewsDetails />} />
         <Route path="/live" element={<LiveTv />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/admin" element={<Admin />} /> {/* <-- Fixed stray < */}
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/approve-news" element={<ApproveNews />} />
+        {/* Admin completely isolated */}
       </Routes>
 
-      {/* Footer always visible */}
-      <Footer />
+      {!isAdmin && !isApprove && <Footer />}
+    </>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <AppWrapper />
     </Router>
   );
 }

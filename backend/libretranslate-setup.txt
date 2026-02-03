@@ -1,0 +1,21 @@
+# LibreTranslate Self-Hosting Instructions
+
+1. Install Docker (recommended):
+   https://docs.docker.com/get-docker/
+
+2. Pull and run LibreTranslate:
+   docker run -d -p 5005:5000 libretranslate/libretranslate
+
+   This will start LibreTranslate on http://localhost:5005
+
+3. Update your frontend code:
+   Change the API URL from https://libretranslate.com/translate to http://localhost:5005/translate
+   (You can use an environment variable or config for this.)
+
+4. (Optional) For production, see: https://github.com/LibreTranslate/LibreTranslate#docker
+
+5. If you want to run without Docker, see the official docs for Python setup.
+
+# After setup
+- Test by visiting http://localhost:5005 in your browser.
+- Update your translateText function to use the new URL.

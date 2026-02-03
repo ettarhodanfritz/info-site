@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+
+import React from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
+import { useI18n } from "../i18n";
+
 
 const Navbar = () => {
-  const [lang, setLang] = useState("en");
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { language, setLanguage, t } = useI18n();
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   return (
     <nav className="navbar">
@@ -29,36 +32,36 @@ const Navbar = () => {
       <ul className={`navbar-menu ${menuOpen ? "show" : ""}`}>
         <li>
           <Link to="/" onClick={() => setMenuOpen(false)}>
-            Home
+            {t("home")}
           </Link>
         </li>
         <li>
           <Link to="/news" onClick={() => setMenuOpen(false)}>
-            News
+            {t("news")}
           </Link>
         </li>
         <li>
           <Link to="/live" onClick={() => setMenuOpen(false)}>
-            Live TV
+            {t("liveTv")}
           </Link>
         </li>
         <li>
           <Link to="/contact" onClick={() => setMenuOpen(false)}>
-            Contact
+            {t("contact")}
           </Link>
         </li>
 
         {/* Language Switcher */}
         <li className="navbar-lang">
           <button
-            className={lang === "en" ? "active" : ""}
-            onClick={() => setLang("en")}
+            className={language === "en" ? "active" : ""}
+            onClick={() => setLanguage("en")}
           >
             EN
           </button>
           <button
-            className={lang === "fr" ? "active" : ""}
-            onClick={() => setLang("fr")}
+            className={language === "fr" ? "active" : ""}
+            onClick={() => setLanguage("fr")}
           >
             FR
           </button>

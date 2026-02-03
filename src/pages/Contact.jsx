@@ -1,13 +1,62 @@
 // src/pages/Contact.jsx
-import React, { useState } from "react";
+
+
+import React, { useState, useEffect } from "react";
 import "../App.css";
+// import "../Admin.css";
+import { useI18n } from "../i18n";
+import emailjs from '@emailjs/browser';
+
 
 const Contact = () => {
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
+  const [translatedPlaceholders, setTranslatedPlaceholders] = useState({
+    name: t("username"),
+    email: "Email",
+    message: t("description"),
+    send: t("send") || "Send Message"
+  });
+  async function translateText(text, targetLang, sourceLang = "auto") {
+    const response = await fetch("https://libretranslate.com/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        q: text,
+        source: sourceLang,
+        target: targetLang,
+        format: "text"
+      }),
+    });
+    const data = await response.json();
+    return data.translatedText;
+  }
+
+  useEffect(() => {
+    if (t("language") === "en") {
+      setTranslatedPlaceholders({
+        name: t("username"),
+        email: "Email",
+        message: t("description"),
+        send: t("send") || "Send Message"
+      });
+      return;
+    }
+    const doTranslate = async () => {
+      setTranslatedPlaceholders({
+        name: await translateText(t("username"), t("language")),
+        email: await translateText("Email", t("language")),
+        message: await translateText(t("description"), t("language")),
+        send: await translateText(t("send") || "Send Message", t("language"))
+      });
+    };
+    doTranslate();
+    // eslint-disable-next-line
+  }, [t("language")]);
 
   const [errors, setErrors] = useState({});
 
@@ -24,20 +73,36 @@ const Contact = () => {
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const [submitStatus, setSubmitStatus] = useState("");
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitStatus("");
     if (validate()) {
-      alert("Form submitted! ✅"); // Replace with API call later
-      setFormData({ name: "", email: "", message: "" });
-      setErrors({});
+      try {
+        await emailjs.send(
+          process.env.REACT_APP_EMAILJS_SERVICE_ID,
+          process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+          {
+            name: formData.name,
+            email: formData.email,
+            message: formData.message
+          },
+          process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+        );
+        setSubmitStatus(t("formSubmitted"));
+        setFormData({ name: "", email: "", message: "" });
+        setErrors({});
+      } catch (err) {
+        setSubmitStatus("Failed to send. Please try again later.");
+      }
     }
   };
 
   return (
     <main>
       <section id="contact">
-        <h2>Contact Us</h2>
-        <p>Have questions or news tips? Reach out directly.</p>
+        <h2>{t("contact")}</h2>
+        <p>{t("haveQuestions")}</p>
 
         <div className="news-cards">
           <form
@@ -48,7 +113,7 @@ const Contact = () => {
             <input
               type="text"
               name="name"
-              placeholder="Your Name"
+              placeholder={translatedPlaceholders.name}
               value={formData.name}
               onChange={handleChange}
             />
@@ -57,7 +122,7 @@ const Contact = () => {
             <input
               type="email"
               name="email"
-              placeholder="Your Email"
+              placeholder={translatedPlaceholders.email}
               value={formData.email}
               onChange={handleChange}
             />
@@ -65,14 +130,15 @@ const Contact = () => {
 
             <textarea
               name="message"
-              placeholder="Your Message"
+              placeholder={translatedPlaceholders.message}
               rows="5"
               value={formData.message}
               onChange={handleChange}
             />
             {errors.message && <p className="error">{errors.message}</p>}
 
-            <button type="submit">Send Message</button>
+            <button type="submit">{translatedPlaceholders.send}</button>
+            {submitStatus && <p className="message">{submitStatus}</p>}
           </form>
         </div>
       </section>

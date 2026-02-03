@@ -1,157 +1,129 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "../App.css";
+// import "../Admin.css";
+import { useI18n } from "../i18n";
 
-const defaultAfrica = [
-  {
-    id: "africa1",
-    title: "African Union Meeting Concludes",
-    description: "Leaders discuss economic growth and unity.",
-    date: "2026-01-30",
-    category: "Politics",
-    imageUrl: "/images/politics1.jpg",
-    videoUrl: "",
-    content: "Full detailed article about the African Union meeting...",
-  },
-  {
-    id: "africa2",
-    title: "Tech Startup Raises Millions",
-    description: "A Nigerian startup secures major funding.",
-    date: "2026-01-29",
-    category: "Tech",
-    imageUrl: "/images/tech1.jpg",
-    videoUrl: "",
-    content: "Full article about the tech startup raising funds...",
-  },
-  {
-    id: "africa3",
-    title: "Environmental Policies Announced",
-    description: "New policies aim to combat climate change.",
-    date: "2026-01-28",
-    category: "Environment",
-    imageUrl: "/images/climate-change.jpg",
-    videoUrl: "",
-    content: "Full article on environmental policies in Africa...",
-  },
-  {
-    id: "africa4",
-    title: "Football Championship Updates",
-    description: "Latest scores and highlights from African leagues.",
-    date: "2026-01-27",
-    category: "Sports",
-    imageUrl: "/images/leagues.jpg",
-    videoUrl: "",
-    content: "Full sports coverage and match analysis...",
-  },
-  {
-    id: "africa5",
-    title: "Health Initiative Launch",
-    description: "Campaign to improve public health launched.",
-    date: "2026-01-26",
-    category: "Health",
-    imageUrl: "/images/health.jpg",
-    videoUrl: "",
-    content: "Full details about the health initiative...",
-  },
-];
-
-const defaultWorld = [
-  {
-    id: "world1",
-    title: "Global Climate Summit",
-    description: "World leaders meet to discuss climate action.",
-    date: "2026-01-30",
-    category: "Environment",
-    imageUrl: "/images/climate.jpg",
-    videoUrl: "",
-    content: "Full article about the global climate summit...",
-  },
-  {
-    id: "world2",
-    title: "Tech Giant Releases New Device",
-    description: "Latest gadget features cutting-edge technology.",
-    date: "2026-01-29",
-    category: "Tech",
-    imageUrl: "/images/tech.jpg",
-    videoUrl: "",
-    content: "Full article about the tech product launch...",
-  },
-  {
-    id: "world3",
-    title: "International Trade Agreement Signed",
-    description: "Countries agree on new economic deal.",
-    date: "2026-01-28",
-    category: "Economy",
-    imageUrl: "/images/economy.jpg",
-    videoUrl: "",
-    content: "Full coverage of the trade agreement...",
-  },
-  {
-    id: "world4",
-    title: "Space Exploration Update",
-    description: "New discoveries from a space mission revealed.",
-    date: "2026-01-27",
-    category: "Science",
-    imageUrl: "/images/science.jpg",
-    videoUrl: "",
-    content: "Full article about the space exploration mission...",
-  },
-  {
-    id: "world5",
-    title: "Global Health Report Released",
-    description: "WHO publishes latest global health findings.",
-    date: "2026-01-26",
-    category: "Health",
-    imageUrl: "/images/who.jpg",
-    videoUrl: "",
-    content: "Full details of the health report and analysis...",
-  },
-];
+async function translateText(text, targetLang, sourceLang = "auto") {
+  const response = await fetch("https://libretranslate.com/translate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      q: text,
+      source: sourceLang,
+      target: targetLang,
+      format: "text"
+    }),
+  });
+  const data = await response.json();
+  return data.translatedText;
+}
 
 const NewsDetails = () => {
+  const { t, language } = useI18n();
   const { id } = useParams();
+  const [news, setNews] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [translating, setTranslating] = useState(false);
+  const baseURL = "http://localhost:5000/"; // backend URL
 
-  const news =
-    defaultAfrica.find((item) => item.id === id) ||
-    defaultWorld.find((item) => item.id === id);
+  useEffect(() => {
+    fetch(`/api/news/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setNews(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, [id]);
 
-  if (!news) {
+  // Translate news details when language changes (except English)
+  useEffect(() => {
+    if (!news || language === "en") return;
+    const doTranslate = async () => {
+      setTranslating(true);
+      const translatedTitle = await translateText(news.title, language);
+      const translatedContent = await translateText(news.content, language);
+      setNews({ ...news, title: translatedTitle, content: translatedContent });
+      setTranslating(false);
+    };
+    doTranslate();
+    // eslint-disable-next-line
+  }, [language, news]);
+
+  if (loading) return <p>Loading...</p>;
+  if (!news)
     return (
       <main>
-        <h2>News Not Found</h2>
-        <Link to="/news">Back to News</Link>
+        <h2>{t("news")} Not Found</h2>
+        <Link to="/news">{t("news")}</Link>
       </main>
     );
-  }
 
   return (
     <main className="news-details animate-in slide-left">
+      {translating && <p>Translating...</p>}
       <h1>{news.title}</h1>
       <p className="news-meta">
-        {news.date} • {news.category}
+        {new Date(news.date).toLocaleDateString()} • {news.category}
       </p>
 
-      {news.imageUrl && news.imageUrl.trim() !== "" && (
+      {news.imageUrl && (
         <img
-          src={news.imageUrl}
+          src={`${baseURL}${news.imageUrl}`}
           alt={news.title}
           style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
         />
       )}
 
-      {news.videoUrl && news.videoUrl.trim() !== "" && (
+      {news.videoUrl && (
         <video
           controls
           style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
         >
-          <source src={news.videoUrl} type="video/mp4" />
+          <source src={`${baseURL}${news.videoUrl}`} type="video/mp4" />
         </video>
       )}
 
       <p>{news.content}</p>
 
       <Link to="/news" style={{ display: "inline-block", marginTop: "20px" }}>
-        ← Back to News
+        {t("news")}
+      </Link>
+    </main>
+  );
+  return (
+    <main className="news-details animate-in slide-left">
+      <h1>{news.title}</h1>
+      <p className="news-meta">
+        {new Date(news.date).toLocaleDateString()}  2 {news.category}
+      </p>
+
+      {news.imageUrl && (
+        <img
+          src={`${baseURL}${news.imageUrl}`}
+          alt={news.title}
+          style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
+        />
+      )}
+
+      {news.videoUrl && (
+        <video
+          controls
+          style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
+        >
+          <source src={`${baseURL}${news.videoUrl}`} type="video/mp4" />
+        </video>
+      )}
+
+      <p>{news.content}</p>
+
+      <Link to="/news" style={{ display: "inline-block", marginTop: "20px" }}>
+        2 190 {t("news")}
       </Link>
     </main>
   );

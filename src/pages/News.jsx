@@ -1,136 +1,35 @@
-import React, { useEffect, useState } from "react";
+
+import React from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
+// import "../Admin.css";
+import { useI18n } from "../i18n";
 
-const defaultAfrica = [
-  {
-    id: "africa1",
-    title: "African Union Meeting Concludes",
-    description: "Leaders discuss economic growth and unity.",
-    date: "2026-01-30",
-    category: "Politics",
-    imageUrl: "/images/politics1.jpg",
-    videoUrl: "",
-    content: "Full detailed article about the African Union meeting...",
-  },
-  {
-    id: "africa2",
-    title: "Tech Startup Raises Millions",
-    description: "A Nigerian startup secures major funding.",
-    date: "2026-01-29",
-    category: "Tech",
-    imageUrl: "/images/tech1.jpg",
-    videoUrl: "",
-    content: "Full article about the tech startup raising funds...",
-  },
-  {
-    id: "africa3",
-    title: "Environmental Policies Announced",
-    description: "New policies aim to combat climate change.",
-    date: "2026-01-28",
-    category: "Environment",
-    imageUrl: "/images/climate-change.jpg",
-    videoUrl: "",
-    content: "Full article on environmental policies in Africa...",
-  },
-  {
-    id: "africa4",
-    title: "Football Championship Updates",
-    description: "Latest scores and highlights from African leagues.",
-    date: "2026-01-27",
-    category: "Sports",
-    imageUrl: "/images/leagues.jpg",
-    videoUrl: "",
-    content: "Full sports coverage and match analysis...",
-  },
-  {
-    id: "africa5",
-    title: "Health Initiative Launch",
-    description: "Campaign to improve public health launched.",
-    date: "2026-01-26",
-    category: "Health",
-    imageUrl: "/images/health.jpg",
-    videoUrl: "",
-    content: "Full details about the health initiative...",
-  },
-];
+const NewsCard = ({ news }) => {
+  const baseURL = "http://localhost:5000/"; // backend URL
 
-const defaultWorld = [
-  {
-    id: "world1",
-    title: "Global Climate Summit",
-    description: "World leaders meet to discuss climate action.",
-    date: "2026-01-30",
-    category: "Environment",
-    imageUrl: "/images/climate.jpg",
-    videoUrl: "",
-    content: "Full article about the global climate summit...",
-  },
-  {
-    id: "world2",
-    title: "Tech Giant Releases New Device",
-    description: "Latest gadget features cutting-edge technology.",
-    date: "2026-01-29",
-    category: "Tech",
-    imageUrl: "/images/tech.jpg",
-    videoUrl: "",
-    content: "Full article about the tech product launch...",
-  },
-  {
-    id: "world3",
-    title: "International Trade Agreement Signed",
-    description: "Countries agree on new economic deal.",
-    date: "2026-01-28",
-    category: "Economy",
-    imageUrl: "/images/economy.jpg",
-    videoUrl: "",
-    content: "Full coverage of the trade agreement...",
-  },
-  {
-    id: "world4",
-    title: "Space Exploration Update",
-    description: "New discoveries from a space mission revealed.",
-    date: "2026-01-27",
-    category: "Science",
-    imageUrl: "/images/science.jpg",
-    videoUrl: "",
-    content: "Full article about the space exploration mission...",
-  },
-  {
-    id: "world5",
-    title: "Global Health Report Released",
-    description: "WHO publishes latest global health findings.",
-    date: "2026-01-26",
-    category: "Health",
-    imageUrl: "/images/who.jpg",
-    videoUrl: "",
-    content: "Full details of the health report and analysis...",
-  },
-];
-
-const NewsCard = ({ news }) => (
-  <article className="news-card-horizontal">
-    {news.imageUrl && (
-      <img src={news.imageUrl} alt={news.title} className="news-image" />
-    )}
-    <h3>{news.title}</h3>
-    <p>{news.description}</p>
-    <p className="news-meta">
-      {news.date} • {news.category}
-    </p>
-    {news.videoUrl && (
-      <video controls className="news-video">
-        <source src={news.videoUrl} type="video/mp4" />
-      </video>
-    )}
-    <Link to={`/news/${news.id}`}>Read More</Link>
-  </article>
-);
+  return (
+    <article className="news-card-horizontal">
+      {news.imageUrl && (
+        <img
+          src={`${baseURL}${news.imageUrl}`}
+          alt={news.title}
+          className="news-image"
+        />
+      )}
+      <h3>{news.title}</h3>
+      <p>{news.description}</p>
+      <p className="news-meta">
+        {new Date(news.date).toLocaleDateString()} • {news.category}
+      </p>
+      {/* Video is only shown on the details page */}
+      <Link to={`/news/${news.id}`}>Read More</Link>
+    </article>
+  );
+};
 
 const ScrollableNews = ({ newsArray }) => {
-  // Duplicate array for seamless scroll
-  const combined = [...newsArray, ...newsArray];
-
+  const combined = [...newsArray, ...newsArray]; // seamless scroll
   return (
     <div className="scroll-container">
       <div className="scroll-content">
@@ -142,24 +41,97 @@ const ScrollableNews = ({ newsArray }) => {
   );
 };
 
-const News = () => {
-  const [africaNews, setAfricaNews] = useState([]);
-  const [worldNews, setWorldNews] = useState([]);
 
-  useEffect(() => {
-    setAfricaNews(defaultAfrica);
-    setWorldNews(defaultWorld);
+async function translateText(text, targetLang, sourceLang = "auto") {
+  const apiKey = process.env.REACT_APP_GOOGLE_TRANSLATE_KEY;
+  if (!apiKey) {
+    console.error("Google Translate API key missing");
+    return text;
+  }
+  try {
+    const response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${apiKey}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        q: text,
+        target: targetLang,
+        source: sourceLang === "auto" ? undefined : sourceLang,
+        format: "text"
+      }),
+    });
+    if (!response.ok) throw new Error("Translation API error");
+    const data = await response.json();
+    if (!data.data || !data.data.translations || !data.data.translations[0]) throw new Error("No translated text");
+    return data.data.translations[0].translatedText;
+  } catch (e) {
+    console.error("Translation failed:", e);
+    return text;
+  }
+}
+
+const News = () => {
+  const { t, language } = useI18n();
+  const [africaNews, setAfricaNews] = React.useState([]);
+  const [worldNews, setWorldNews] = React.useState([]);
+  const [originalAfricaNews, setOriginalAfricaNews] = React.useState([]);
+  const [originalWorldNews, setOriginalWorldNews] = React.useState([]);
+  const [lastTranslatedLang, setLastTranslatedLang] = React.useState("en");
+  const [loading, setLoading] = React.useState(false);
+
+  // Fetch news on mount
+  React.useEffect(() => {
+    fetch("/api/news/africa")
+      .then((res) => res.json())
+      .then((data) => {
+        setAfricaNews(Array.isArray(data) ? data : []);
+        setOriginalAfricaNews(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => { console.error(err); setAfricaNews([]); setOriginalAfricaNews([]); });
+    fetch("/api/news/world")
+      .then((res) => res.json())
+      .then((data) => {
+        setWorldNews(Array.isArray(data) ? data : []);
+        setOriginalWorldNews(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => { console.error(err); setWorldNews([]); setOriginalWorldNews([]); });
+    setLastTranslatedLang("en");
   }, []);
+
+  // Translate news when language changes
+  React.useEffect(() => {
+    if (language === lastTranslatedLang) return;
+    if (language === "en") {
+      setAfricaNews(originalAfricaNews);
+      setWorldNews(originalWorldNews);
+      setLastTranslatedLang("en");
+      return;
+    }
+    const doTranslate = async () => {
+      setLoading(true);
+      const translateArr = async (arr) => Promise.all(arr.map(async (item) => ({
+        ...item,
+        title: await translateText(item.title, language),
+        description: await translateText(item.description, language),
+      })));
+      setAfricaNews(await translateArr(originalAfricaNews));
+      setWorldNews(await translateArr(originalWorldNews));
+      setLastTranslatedLang(language);
+      setLoading(false);
+    };
+    if (originalAfricaNews.length || originalWorldNews.length) doTranslate();
+    // eslint-disable-next-line
+  }, [language, originalAfricaNews, originalWorldNews, lastTranslatedLang]);
 
   return (
     <main>
+      {loading && <p>Translating news...</p>}
       <section className="news-section" id="africa-news">
-        <h2>Africa News</h2>
+        <h2>{t("news") + " - Africa"}</h2>
         <ScrollableNews newsArray={africaNews} />
       </section>
 
       <section className="news-section" id="world-news">
-        <h2>World News</h2>
+        <h2>{t("news") + " - World"}</h2>
         <ScrollableNews newsArray={worldNews} />
       </section>
     </main>

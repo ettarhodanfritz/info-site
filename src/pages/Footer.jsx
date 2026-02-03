@@ -1,48 +1,51 @@
 // src/components/Footer.jsx
+
 import React from "react";
 import "../App.css";
+import { useI18n } from "../i18n";
 
 const Footer = () => {
+  const { t } = useI18n();
   return (
     <footer className="footer">
       {/* Branding */}
       <div className="footer-section footer-branding">
         <h2>Afrique Internationale</h2>
-        <p>Your source for news across Africa and the world</p>
+        <p>{t("uploadEditDelete")}</p>
       </div>
 
       {/* Quick Links */}
       <div className="footer-section footer-links">
-        <h3>Quick Links</h3>
+        <h3>{t("quickLinks")}</h3>
         <ul>
           <li>
-            <a href="/">Home</a>
+            <a href="/">{t("home")}</a>
           </li>
           <li>
-            <a href="/news">News</a>
+            <a href="/news">{t("news")}</a>
           </li>
           <li>
-            <a href="/live">Live TV</a>
+            <a href="/live">{t("liveTv")}</a>
           </li>
           <li>
-            <a href="/contact">Contact</a>
+            <a href="/contact">{t("contact")}</a>
           </li>
         </ul>
       </div>
 
       {/* Social / Contact */}
       <div className="footer-section footer-contact">
-        <h3>Connect with us</h3>
+        <h3>{t("connectWithUs")}</h3>
         <div className="footer-social">
           {/* You can replace these <img> with your own icons */}
-          <a href="https://wa.me/YOUR_NUMBER" target="_blank" rel="noreferrer">
+          <a href="https://wa.me/674407882" target="_blank" rel="noreferrer">
             <img src="/images/whatsapp.png" alt="WhatsApp" />
           </a>
-          <a href="mailto:info@afriqueinternationale.com">
-            <img src="/images/email (1).png" alt="Email" />
+          <a href="mailto:africainpressconsulting@gmail.com">
+            <img src="/images/email.png" alt="Email" />
           </a>
           <a
-            href="https://www.instagram.com/YOUR_ACCOUNT"
+            href="https://www.instagram.com/afrique_internationale?igsh=MWU5cnk3bHp4dTcyMQ%3D%3D&utm_source=qr"
             target="_blank"
             rel="noreferrer"
           >

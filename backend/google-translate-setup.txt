@@ -1,0 +1,19 @@
+# Google Cloud Translation API Setup
+
+1. Go to https://cloud.google.com/translate and click "Get started for free".
+2. Sign in with your Google account and create a new project.
+3. Enable the Cloud Translation API for your project.
+4. Set up billing (required, but you get $300 free credits for 90 days).
+5. Create an API key:
+   - Go to APIs & Services > Credentials > Create credentials > API key.
+   - Copy the API key.
+6. Restrict your API key to only allow requests from your website (optional but recommended).
+7. In your React project, add your API key to your .env file:
+   REACT_APP_GOOGLE_TRANSLATE_KEY=your_api_key_here
+8. Update your translateText function to use Google Translate API:
+   POST https://translation.googleapis.com/language/translate/v2?key=YOUR_API_KEY
+   with body: { q: "text", target: "fr" }
+
+See https://cloud.google.com/translate/docs/reference/rest/v2/translate for full API docs.
+
+Let your developer update the code to use this API for dynamic translation.

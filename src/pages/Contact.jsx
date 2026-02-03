@@ -1,15 +1,13 @@
 // src/pages/Contact.jsx
 
-
 import React, { useState, useEffect } from "react";
 import "../App.css";
 // import "../Admin.css";
 import { useI18n } from "../i18n";
-import emailjs from '@emailjs/browser';
-
+import emailjs from "@emailjs/browser";
 
 const Contact = () => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,18 +17,17 @@ const Contact = () => {
     name: t("username"),
     email: "Email",
     message: t("description"),
-    send: t("send") || "Send Message"
+    send: t("send") || "Send Message",
   });
-
 
   useEffect(() => {
     setTranslatedPlaceholders({
       name: t("username"),
       email: "Email",
       message: t("description"),
-      send: t("send") || "Send Message"
+      send: t("send") || "Send Message",
     });
-  }, [t("language")]);
+  }, [language, t]);
 
   const [errors, setErrors] = useState({});
 
@@ -59,9 +56,9 @@ const Contact = () => {
           {
             name: formData.name,
             email: formData.email,
-            message: formData.message
+            message: formData.message,
           },
-          process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+          process.env.REACT_APP_EMAILJS_PUBLIC_KEY,
         );
         setSubmitStatus(t("formSubmitted"));
         setFormData({ name: "", email: "", message: "" });

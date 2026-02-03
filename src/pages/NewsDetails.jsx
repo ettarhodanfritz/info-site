@@ -8,7 +8,7 @@ import { useI18n } from "../i18n";
 
 
 const NewsDetails = () => {
-  const { t, language } = useI18n();
+  const { t } = useI18n();
   const { id } = useParams();
   const [news, setNews] = useState(null);
   const [loading, setLoading] = useState(true);

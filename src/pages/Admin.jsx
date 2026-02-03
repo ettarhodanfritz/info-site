@@ -19,11 +19,12 @@ const Admin = () => {
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
-                  // ...existing code...
+  // ...existing code...
   // Fetch all news
   const fetchNews = async () => {
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
+      const apiUrl =
+        process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
       const res = await fetch(`${apiUrl}/api/news`);
       const data = await res.json();
       setNewsList(Array.isArray(data) ? data : []);
@@ -40,7 +41,10 @@ const Admin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("category", category === "Other" ? customCategory : category);
+    formData.append(
+      "category",
+      category === "Other" ? customCategory : category,
+    );
     formData.append("title", title);
     formData.append("description", description);
     formData.append("content", content);
@@ -49,11 +53,10 @@ const Admin = () => {
     if (videoFile) formData.append("video", videoFile);
 
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
+      const apiUrl =
+        process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
       const res = await fetch(
-        editingId
-          ? `${apiUrl}/api/news/${editingId}`
-          : `${apiUrl}/api/news`,
+        editingId ? `${apiUrl}/api/news/${editingId}` : `${apiUrl}/api/news`,
         {
           method: editingId ? "PUT" : "POST",
           body: formData,
@@ -85,11 +88,15 @@ const Admin = () => {
     e.preventDefault();
     setLoginError("");
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
+      const apiUrl =
+        process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
       const res = await fetch(`${apiUrl}/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: loginUsername, password: loginPassword }),
+        body: JSON.stringify({
+          username: loginUsername,
+          password: loginPassword,
+        }),
       });
       const data = await res.json();
       if (res.ok && data.token) {
@@ -100,7 +107,6 @@ const Admin = () => {
       } else {
         setLoginError(data.message || "Login failed");
       }
-      
     } catch (err) {
       setLoginError("Login failed");
     }
@@ -110,22 +116,33 @@ const Admin = () => {
     setTitle(news.title);
     setDescription(news.description);
     setContent(news.content);
-      if (["Politics","Tech","Environment","Sports","Health","Economy","Science"].includes(news.category)) {
-        setCategory(news.category);
-        setCustomCategory("");
-      } else {
-        setCategory("Other");
-        setCustomCategory(news.category);
-      }
-      setRegion(news.region);
-      setEditingId(news.id); // sqlite uses id
-      setMessage("");
+    if (
+      [
+        "Politics",
+        "Tech",
+        "Environment",
+        "Sports",
+        "Health",
+        "Economy",
+        "Science",
+      ].includes(news.category)
+    ) {
+      setCategory(news.category);
+      setCustomCategory("");
+    } else {
+      setCategory("Other");
+      setCustomCategory(news.category);
+    }
+    setRegion(news.region);
+    setEditingId(news.id); // sqlite uses id
+    setMessage("");
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this news?")) return;
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
+      const apiUrl =
+        process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
       await fetch(`${apiUrl}/api/news/${id}`, { method: "DELETE" });
       setMessage("News deleted!");
       fetchNews();
@@ -135,23 +152,35 @@ const Admin = () => {
     }
   };
 
-
-
   if (!token) {
     return (
       <div className="admin-root">
         <main className="admin-dashboard">
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: 10,
+            }}
+          >
             <label>
               {t("selectLanguage")}
-              <select value={language} onChange={e => setLanguage(e.target.value)} style={{ marginLeft: 8 }}>
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                style={{ marginLeft: 8 }}
+              >
                 <option value="en">English</option>
                 <option value="fr">Français</option>
               </select>
             </label>
           </div>
           <h1>{t("adminLogin") || "Admin Login"}</h1>
-          <div style={{marginBottom:10, color:'#2196f3', fontWeight:'bold'}}>Admin Dashboard Login</div>
+          <div
+            style={{ marginBottom: 10, color: "#2196f3", fontWeight: "bold" }}
+          >
+            Admin Dashboard Login
+          </div>
           <form className="admin-form" onSubmit={handleLogin}>
             <label>
               {t("username")}
@@ -183,10 +212,20 @@ const Admin = () => {
   return (
     <div className="admin-root">
       <main className="admin-dashboard">
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: 10,
+          }}
+        >
           <label>
             {t("selectLanguage")}
-            <select value={language} onChange={e => setLanguage(e.target.value)} style={{ marginLeft: 8 }}>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              style={{ marginLeft: 8 }}
+            >
               <option value="en">English</option>
               <option value="fr">Français</option>
             </select>
@@ -228,7 +267,7 @@ const Admin = () => {
             {t("category")}
             <select
               value={category}
-              onChange={e => setCategory(e.target.value)}
+              onChange={(e) => setCategory(e.target.value)}
             >
               <option>Politics</option>
               <option>Tech</option>
@@ -246,18 +285,18 @@ const Admin = () => {
               <input
                 type="text"
                 value={customCategory}
-                onChange={e => setCustomCategory(e.target.value)}
+                onChange={(e) => setCustomCategory(e.target.value)}
                 required
               />
             </label>
           )}
-        <label>
-          {t("region")}
-          <select value={region} onChange={(e) => setRegion(e.target.value)}>
-            <option>Africa</option>
-            <option>World</option>
-          </select>
-        </label>
+          <label>
+            {t("region")}
+            <select value={region} onChange={(e) => setRegion(e.target.value)}>
+              <option>Africa</option>
+              <option>World</option>
+            </select>
+          </label>
           <label>
             {t("image")}
             <input
@@ -288,7 +327,9 @@ const Admin = () => {
               </p>
               <div className="news-actions">
                 <button onClick={() => handleEdit(news)}>{t("edit")}</button>
-                <button onClick={() => handleDelete(news.id)}>{t("delete")}</button>
+                <button onClick={() => handleDelete(news.id)}>
+                  {t("delete")}
+                </button>
               </div>
             </div>
           ))}

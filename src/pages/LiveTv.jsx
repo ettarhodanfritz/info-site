@@ -32,11 +32,12 @@ const LiveTV = () => {
 
 
 
+  const { t, language } = useI18n();
   useEffect(() => {
     setTranslatedChannels(baseChannels);
     setTranslatedTitle(t("liveTv") || "Live TV");
     setTranslatedSelect(t("selectChannel") || "Select a channel");
-  }, [t("language")]);
+  }, [language, t]);
 
   return (
     <main className="live-tv-main">

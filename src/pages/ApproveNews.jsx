@@ -53,7 +53,8 @@ const ApproveNews = () => {
         else setAllNews([]);
       })
         .catch(() => setAllNews([]));
-      }, [actionMsg, token]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actionMsg, token, t]);
 
   const handleDelete = (newsId) => {
     if (!window.confirm(t("confirmDelete") || "Are you sure you want to delete this news item?")) return;

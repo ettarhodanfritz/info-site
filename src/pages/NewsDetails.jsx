@@ -12,7 +12,7 @@ const NewsDetails = () => {
   const { id } = useParams();
   const [news, setNews] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [translating, setTranslating] = useState(false);
+  // const [translating, setTranslating] = useState(false);
   const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const NewsDetails = () => {
         console.error(err);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, apiUrl]);
 
 
 

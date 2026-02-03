@@ -22,7 +22,8 @@ const Admin = () => {
   // Fetch all news
   const fetchNews = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/news");
+      const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
+      const res = await fetch(`${apiUrl}/api/news`);
       const data = await res.json();
       setNewsList(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -47,10 +48,11 @@ const Admin = () => {
     if (videoFile) formData.append("video", videoFile);
 
     try {
+      const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
       const res = await fetch(
         editingId
-          ? `http://localhost:5000/api/news/${editingId}`
-          : "http://localhost:5000/api/news",
+          ? `${apiUrl}/api/news/${editingId}`
+          : `${apiUrl}/api/news`,
         {
           method: editingId ? "PUT" : "POST",
           body: formData,
@@ -83,7 +85,8 @@ const Admin = () => {
     e.preventDefault();
     setLoginError("");
     try {
-      const res = await fetch("http://localhost:5000/api/admin/login", {
+      const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
+      const res = await fetch(`${apiUrl}/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: loginUsername, password: loginPassword }),
@@ -115,7 +118,8 @@ const Admin = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this news?")) return;
     try {
-      await fetch(`/api/news/${id}`, { method: "DELETE" });
+      const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
+      await fetch(`${apiUrl}/api/news/${id}`, { method: "DELETE" });
       setMessage("News deleted!");
       fetchNews();
     } catch (err) {

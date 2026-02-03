@@ -21,41 +21,15 @@ const Contact = () => {
     message: t("description"),
     send: t("send") || "Send Message"
   });
-  async function translateText(text, targetLang, sourceLang = "auto") {
-    const response = await fetch("https://libretranslate.com/translate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        q: text,
-        source: sourceLang,
-        target: targetLang,
-        format: "text"
-      }),
-    });
-    const data = await response.json();
-    return data.translatedText;
-  }
+
 
   useEffect(() => {
-    if (t("language") === "en") {
-      setTranslatedPlaceholders({
-        name: t("username"),
-        email: "Email",
-        message: t("description"),
-        send: t("send") || "Send Message"
-      });
-      return;
-    }
-    const doTranslate = async () => {
-      setTranslatedPlaceholders({
-        name: await translateText(t("username"), t("language")),
-        email: await translateText("Email", t("language")),
-        message: await translateText(t("description"), t("language")),
-        send: await translateText(t("send") || "Send Message", t("language"))
-      });
-    };
-    doTranslate();
-    // eslint-disable-next-line
+    setTranslatedPlaceholders({
+      name: t("username"),
+      email: "Email",
+      message: t("description"),
+      send: t("send") || "Send Message"
+    });
   }, [t("language")]);
 
   const [errors, setErrors] = useState({});

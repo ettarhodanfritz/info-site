@@ -44,14 +44,15 @@ const Home = () => {
   }
 
   React.useEffect(() => {
-    fetch("/api/news/africa")
+    const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
+    fetch(`${apiUrl}/api/news/africa`)
       .then((res) => res.json())
       .then((data) => {
         setAfricaNews(Array.isArray(data) ? data : []);
         setOriginalAfricaNews(Array.isArray(data) ? data : []);
       })
       .catch(() => { setAfricaNews([]); setOriginalAfricaNews([]); });
-    fetch("/api/news/world")
+    fetch(`${apiUrl}/api/news/world`)
       .then((res) => res.json())
       .then((data) => {
         setWorldNews(Array.isArray(data) ? data : []);

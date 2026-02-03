@@ -6,13 +6,13 @@ import "../App.css";
 import { useI18n } from "../i18n";
 
 const NewsCard = ({ news }) => {
-  const baseURL = "http://localhost:5000/"; // backend URL
+  const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
 
   return (
     <article className="news-card-horizontal">
       {news.imageUrl && (
         <img
-          src={`${baseURL}${news.imageUrl}`}
+          src={`${apiUrl}/${news.imageUrl}`}
           alt={news.title}
           className="news-image"
         />
@@ -80,14 +80,15 @@ const News = () => {
 
   // Fetch news on mount
   React.useEffect(() => {
-    fetch("/api/news/africa")
+    const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
+    fetch(`${apiUrl}/api/news/africa`)
       .then((res) => res.json())
       .then((data) => {
         setAfricaNews(Array.isArray(data) ? data : []);
         setOriginalAfricaNews(Array.isArray(data) ? data : []);
       })
       .catch((err) => { console.error(err); setAfricaNews([]); setOriginalAfricaNews([]); });
-    fetch("/api/news/world")
+    fetch(`${apiUrl}/api/news/world`)
       .then((res) => res.json())
       .then((data) => {
         setWorldNews(Array.isArray(data) ? data : []);

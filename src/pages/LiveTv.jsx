@@ -30,36 +30,12 @@ const LiveTV = () => {
   const [translatedTitle, setTranslatedTitle] = useState(t("liveTv") || "Live TV");
   const [translatedSelect, setTranslatedSelect] = useState(t("selectChannel") || "Select a channel");
 
-  async function translateText(text, targetLang, sourceLang = "auto") {
-    const response = await fetch("https://libretranslate.com/translate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        q: text,
-        source: sourceLang,
-        target: targetLang,
-        format: "text"
-      }),
-    });
-    const data = await response.json();
-    return data.translatedText;
-  }
+
 
   useEffect(() => {
-    if (t("language") === "en") {
-      setTranslatedChannels(baseChannels);
-      setTranslatedTitle(t("liveTv") || "Live TV");
-      setTranslatedSelect(t("selectChannel") || "Select a channel");
-      return;
-    }
-    const doTranslate = async () => {
-      setTranslatedTitle(await translateText(t("liveTv") || "Live TV", t("language")));
-      setTranslatedSelect(await translateText(t("selectChannel") || "Select a channel", t("language")));
-      const names = await Promise.all(baseChannels.map(c => translateText(c.name, t("language"))));
-      setTranslatedChannels(baseChannels.map((c, i) => ({ ...c, name: names[i] })));
-    };
-    doTranslate();
-    // eslint-disable-next-line
+    setTranslatedChannels(baseChannels);
+    setTranslatedTitle(t("liveTv") || "Live TV");
+    setTranslatedSelect(t("selectChannel") || "Select a channel");
   }, [t("language")]);
 
   return (

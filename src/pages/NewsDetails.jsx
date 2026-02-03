@@ -5,20 +5,7 @@ import "../App.css";
 // import "../Admin.css";
 import { useI18n } from "../i18n";
 
-async function translateText(text, targetLang, sourceLang = "auto") {
-  const response = await fetch("https://libretranslate.com/translate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      q: text,
-      source: sourceLang,
-      target: targetLang,
-      format: "text"
-    }),
-  });
-  const data = await response.json();
-  return data.translatedText;
-}
+
 
 const NewsDetails = () => {
   const { t, language } = useI18n();
@@ -26,10 +13,10 @@ const NewsDetails = () => {
   const [news, setNews] = useState(null);
   const [loading, setLoading] = useState(true);
   const [translating, setTranslating] = useState(false);
-  const baseURL = "http://localhost:5000/"; // backend URL
+  const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
 
   useEffect(() => {
-    fetch(`/api/news/${id}`)
+    fetch(`${apiUrl}/api/news/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setNews(data);
@@ -41,19 +28,7 @@ const NewsDetails = () => {
       });
   }, [id]);
 
-  // Translate news details when language changes (except English)
-  useEffect(() => {
-    if (!news || language === "en") return;
-    const doTranslate = async () => {
-      setTranslating(true);
-      const translatedTitle = await translateText(news.title, language);
-      const translatedContent = await translateText(news.content, language);
-      setNews({ ...news, title: translatedTitle, content: translatedContent });
-      setTranslating(false);
-    };
-    doTranslate();
-    // eslint-disable-next-line
-  }, [language, news]);
+
 
   if (loading) return <p>Loading...</p>;
   if (!news)
@@ -74,7 +49,7 @@ const NewsDetails = () => {
 
       {news.imageUrl && (
         <img
-          src={`${baseURL}${news.imageUrl}`}
+          src={`${apiUrl}/${news.imageUrl}`}
           alt={news.title}
           style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
         />
@@ -85,7 +60,7 @@ const NewsDetails = () => {
           controls
           style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
         >
-          <source src={`${baseURL}${news.videoUrl}`} type="video/mp4" />
+          <source src={`${apiUrl}/${news.videoUrl}`} type="video/mp4" />
         </video>
       )}
 

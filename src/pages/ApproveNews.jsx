@@ -4,6 +4,7 @@ import { useI18n } from "../i18n";
 
 const ApproveNews = () => {
   const { t, language, setLanguage } = useI18n();
+  const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
   const [pendingNews, setPendingNews] = useState([]);
   const [allNews, setAllNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,7 @@ const ApproveNews = () => {
     if (!token) return;
     setLoading(true);
     // Fetch pending news
-    fetch("/api/news/pending", {
+    fetch(`${apiUrl}/api/news/pending`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(async (res) => {
@@ -43,7 +44,7 @@ const ApproveNews = () => {
         setLoading(false);
       });
     // Fetch all news (approved and unapproved)
-    fetch("/api/news", {
+    fetch(`${apiUrl}/api/news`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -57,7 +58,7 @@ const ApproveNews = () => {
   const handleDelete = (newsId) => {
     if (!window.confirm(t("confirmDelete") || "Are you sure you want to delete this news item?")) return;
     setLoading(true);
-    fetch(`/api/news/${newsId}`, {
+    fetch(`${apiUrl}/api/news/${newsId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -84,7 +85,7 @@ const ApproveNews = () => {
   };
 
   const handleApprove = (id) => {
-    fetch(`/api/news/${id}/approve`, {
+    fetch(`${apiUrl}/api/news/${id}/approve`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -94,7 +95,7 @@ const ApproveNews = () => {
   };
 
   const handleDecline = (id) => {
-    fetch(`/api/news/${id}/decline`, {
+    fetch(`${apiUrl}/api/news/${id}/decline`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -107,7 +108,7 @@ const ApproveNews = () => {
     e.preventDefault();
     setLoginError("");
     try {
-      const res = await fetch("/api/admin/login", {
+      const res = await fetch(`${apiUrl}/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: loginUsername, password: loginPassword }),

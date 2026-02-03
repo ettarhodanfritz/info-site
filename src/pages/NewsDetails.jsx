@@ -41,7 +41,7 @@ const NewsDetails = () => {
 
   return (
     <main className="news-details animate-in slide-left">
-      {translating && <p>Translating...</p>}
+      {/* Removed translating indicator as translating is not defined */}
       <h1>{news.title}</h1>
       <p className="news-meta">
         {new Date(news.date).toLocaleDateString()} • {news.category}

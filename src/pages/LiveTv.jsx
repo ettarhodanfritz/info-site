@@ -25,14 +25,11 @@ const baseChannels = [
 
 
 const LiveTV = () => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [translatedChannels, setTranslatedChannels] = useState(baseChannels);
   const [translatedTitle, setTranslatedTitle] = useState(t("liveTv") || "Live TV");
   const [translatedSelect, setTranslatedSelect] = useState(t("selectChannel") || "Select a channel");
 
-
-
-  const { t, language } = useI18n();
   useEffect(() => {
     setTranslatedChannels(baseChannels);
     setTranslatedTitle(t("liveTv") || "Live TV");

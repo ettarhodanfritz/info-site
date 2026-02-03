@@ -1,4 +1,12 @@
 {
+  "superAdminLogin": "Connexion Superadmin",
+  "editNews": "Modifier l'actualité",
+  "cancel": "Annuler",
+  "image": "Image:",
+  "video": "Vidéo:",
+  "mediaImage": "Image:",
+  "mediaVideo": "Vidéo:",
+  "specifyCategory": "Précisez la catégorie :",
   "approveNews": "Approuver les actualités",
   "reviewApproveNews": "Vérifiez et approuvez ou refusez les actualités soumises.",
   "pendingNews": "Actualités en attente",

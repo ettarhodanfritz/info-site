@@ -1,4 +1,12 @@
 {
+  "superAdminLogin": "Superadmin Login",
+  "editNews": "Edit News",
+  "cancel": "Cancel",
+  "image": "Image:",
+  "video": "Video:",
+  "mediaImage": "Image:",
+  "mediaVideo": "Video:",
+  "specifyCategory": "Specify Category:",
   "approveNews": "Approve News",
   "reviewApproveNews": "Review and approve or decline submitted news.",
   "pendingNews": "Pending News",

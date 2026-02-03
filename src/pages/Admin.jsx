@@ -9,6 +9,7 @@ const Admin = () => {
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("Politics");
+  const [customCategory, setCustomCategory] = useState("");
   const [region, setRegion] = useState("Africa");
   const [imageFile, setImageFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
@@ -18,7 +19,7 @@ const Admin = () => {
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
-
+                  // ...existing code...
   // Fetch all news
   const fetchNews = async () => {
     try {
@@ -39,10 +40,10 @@ const Admin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+    formData.append("category", category === "Other" ? customCategory : category);
     formData.append("title", title);
     formData.append("description", description);
     formData.append("content", content);
-    formData.append("category", category);
     formData.append("region", region);
     if (imageFile) formData.append("image", imageFile);
     if (videoFile) formData.append("video", videoFile);
@@ -63,7 +64,6 @@ const Admin = () => {
       );
 
       if (!res.ok) throw new Error("Request failed");
-
       setMessage(editingId ? "News updated!" : "News uploaded!");
       setTitle("");
       setDescription("");
@@ -100,6 +100,7 @@ const Admin = () => {
       } else {
         setLoginError(data.message || "Login failed");
       }
+      
     } catch (err) {
       setLoginError("Login failed");
     }
@@ -109,10 +110,16 @@ const Admin = () => {
     setTitle(news.title);
     setDescription(news.description);
     setContent(news.content);
-    setCategory(news.category);
-    setRegion(news.region);
-    setEditingId(news.id); // sqlite uses id
-    setMessage("");
+      if (["Politics","Tech","Environment","Sports","Health","Economy","Science"].includes(news.category)) {
+        setCategory(news.category);
+        setCustomCategory("");
+      } else {
+        setCategory("Other");
+        setCustomCategory(news.category);
+      }
+      setRegion(news.region);
+      setEditingId(news.id); // sqlite uses id
+      setMessage("");
   };
 
   const handleDelete = async (id) => {
@@ -143,7 +150,8 @@ const Admin = () => {
               </select>
             </label>
           </div>
-          <h1>{t("adminLogin")}</h1>
+          <h1>{t("adminLogin") || "Admin Login"}</h1>
+          <div style={{marginBottom:10, color:'#2196f3', fontWeight:'bold'}}>Admin Dashboard Login</div>
           <form className="admin-form" onSubmit={handleLogin}>
             <label>
               {t("username")}
@@ -220,7 +228,7 @@ const Admin = () => {
             {t("category")}
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={e => setCategory(e.target.value)}
             >
               <option>Politics</option>
               <option>Tech</option>
@@ -229,15 +237,27 @@ const Admin = () => {
               <option>Health</option>
               <option>Economy</option>
               <option>Science</option>
+              <option>Other</option>
             </select>
           </label>
-          <label>
-            {t("region")}
-            <select value={region} onChange={(e) => setRegion(e.target.value)}>
-              <option>Africa</option>
-              <option>World</option>
-            </select>
-          </label>
+          {category === "Other" && (
+            <label>
+              Specify Category
+              <input
+                type="text"
+                value={customCategory}
+                onChange={e => setCustomCategory(e.target.value)}
+                required
+              />
+            </label>
+          )}
+        <label>
+          {t("region")}
+          <select value={region} onChange={(e) => setRegion(e.target.value)}>
+            <option>Africa</option>
+            <option>World</option>
+          </select>
+        </label>
           <label>
             {t("image")}
             <input

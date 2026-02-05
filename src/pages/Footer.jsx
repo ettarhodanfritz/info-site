@@ -52,7 +52,7 @@ const Footer = () => {
             <img src="/images/instagram.png" alt="Instagram" />
           </a>
           <a
-            href="https://www.youtube.com/YOUR_CHANNEL"
+            href="https://m.youtube.com/channel/UCPUwvLTv3k2q28pI_6rvk5A"
             target="_blank"
             rel="noreferrer"
           >

@@ -6,20 +6,9 @@ import { useI18n } from "../i18n";
 
 const baseChannels = [
   {
-    id: "ddnews",
-    name: "DD News 24x7",
-    embedUrl: "https://www.youtube.com/embed/TxoAYWg64Ao",
-  },
-  {
-    id: "ddindia",
-    name: "DD India Live News",
-    embedUrl: "https://www.youtube.com/embed/TBlxk1kH9dM",
-  },
-  {
-    id: "france24",
-    name: "France 24 English Live",
-    embedUrl:
-      "https://www.youtube.com/embed/live_stream?channel=UCLqNJlHfQYqFpT2Np6H5t1Q",
+    id: "afrique-internationale",
+    name: "Afrique Internationale TV",
+    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCPUwvLTv3k2q28pI_6rvk5A",
   },
 ];
 

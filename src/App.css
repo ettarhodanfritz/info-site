@@ -1,12 +1,186 @@
+@media (max-width: 768px) {
+  .navbar-main {
+    position: relative;
+    width: 100%;
+  }
+  .hamburger {
+    z-index: 1100;
+  }
+  .navbar-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: auto;
+    background-color: #333;
+    border-radius: 12px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    width: 200px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    animation: dropdownFade 0.25s ease-out;
+  }
+  .navbar-menu.show {
+    display: flex;
+  }
+}
+
+.navbar {
+  background-color: #333;
+  padding: 15px 30px;
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #ff0000;
+}
+
+.navbar-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.hamburger {
+  margin-right: 20px;
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex: 1 1 auto;
+}
+
+.navbar-logo {
+  margin-left: 20px;
+}
+
+.navbar-logo-right {
+  margin-left: auto;
+}
+
+.navbar-main {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  gap: 24px;
+}
+
+.navbar-main {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  gap: 24px;
+}
+/* =========================
+   ZONES DROPDOWN (DESKTOP)
+   ========================= */
+.navbar-zones {
+  position: relative;
+}
+.navbar-zones .dropdown-toggle {
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.navbar-zones .dropdown-toggle:hover {
+  background: #444;
+}
+/* Compact Zones Dropdown Styles */
+.navbar-zones .dropdown-menu {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  min-width: 220px;
+  background: #222;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  padding: 10px 0;
+  z-index: 999;
+}
+.navbar-zones:hover .dropdown-menu,
+.navbar-zones:focus-within .dropdown-menu {
+  display: block;
+}
+.navbar-zones .dropdown-menu.compact-zones {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-bottom: 8px;
+}
+.zone-group {
+  border-bottom: 1px solid #333;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.zone-group-toggle {
+  font-size: 1.08rem;
+  color: #ffd700;
+  padding: 8px 24px;
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: left;
+  transition: background 0.2s;
+}
+.zone-group-toggle:hover {
+  background: #333;
+}
+.zone-group ul {
+  margin: 0;
+  padding: 0 0 0 0;
+}
+.zone-group li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.zone-group a {
+  color: #b0c4de;
+  text-decoration: none;
+  display: block;
+  padding: 6px 40px;
+  font-size: 0.98rem;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.zone-group a:hover {
+  background: #0056b3;
+  color: #fff;
+}
+.zone-group > a {
+  color: #fff;
+  font-weight: 500;
+  padding: 6px 40px;
+  font-size: 1rem;
+}
+.zone-group > a:hover {
+  background: #0056b3;
+  color: #fff;
+}
+.navbar-zones .dropdown-menu li:last-child {
+  border-bottom: none;
+}
+.navbar-zones .dropdown-menu li strong {
+  color: #ffd700;
+  font-size: 1.08rem;
+}
 /* Ensure visible placeholder text for contact form */
 input::placeholder,
 textarea::placeholder {
   color: #333;
   opacity: 1;
 }
-/* =========================
-   GLOBAL RESET & BODY
-   ========================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -18,7 +192,7 @@ body {
   line-height: 1.6;
   background-color: #f7f7f7;
   color: #333;
-  padding-bottom: env(safe-area-insert-bottom) html;
+  padding-bottom: env(safe-area-insert-bottom);
 }
 
 body {
@@ -28,11 +202,11 @@ body {
 /* =========================
    NAVBAR
    ========================= */
+
 .navbar {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
   align-items: center;
-  /*background-color: #003366;*/
   background-color: #333;
   padding: 15px 30px;
   color: #ffffff;
@@ -42,11 +216,40 @@ body {
   border-bottom: 1px solid #ff0000;
 }
 
+.navbar-main {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  gap: 24px;
+}
+
+.navbar-logo {
+  margin-left: 20px;
+}
+
+.navbar-logo-right {
+  margin-left: auto;
+}
+
+.hamburger {
+  margin-right: 20px;
+}
+
 .navbar-logo a {
   color: #1e90ff;
   font-size: 1.5rem;
   font-weight: bold;
   text-decoration: none;
+}
+
+/* Swap order for logo and hamburger */
+.navbar-logo {
+  order: 2;
+  margin-left: 20px;
+}
+.hamburger {
+  order: 1;
+  margin-right: 20px;
 }
 
 .navbar-logo img {
@@ -599,8 +802,17 @@ body {
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
+    order: 1;
+    margin-right: 10px;
   }
-
+  .navbar-logo {
+    order: 2;
+    margin-left: 10px;
+  }
+  .navbar-logo-right {
+    margin-left: auto;
+    order: 3;
+  }
   .navbar-menu {
     position: absolute;
     top: 70px;
@@ -609,8 +821,8 @@ body {
     border-radius: 12px;
     display: none;
     flex-direction: column;
-    gap: 12px;
-    padding: 14px 18px;
+    gap: 4px;
+    padding: 10px 12px;
     width: 200px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
     animation: dropdownFade 0.25s ease-out;
@@ -622,6 +834,9 @@ body {
 
   .navbar-menu li a {
     width: 100%;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin: 0;
   }
 
   /* Stack language buttons vertically */
@@ -637,6 +852,47 @@ body {
   .navbar-menu .navbar-lang button {
     width: 100%;
     text-align: center;
+  }
+
+  /* Mobile Zones Dropdown */
+  .navbar-zones .dropdown-menu.compact-zones {
+    max-height: 260px;
+    min-width: 180px;
+    width: 100%;
+    overflow-y: auto;
+    padding-bottom: 8px;
+    left: 0;
+    top: 100%;
+    font-size: 0.98rem;
+  }
+  .zone-group-toggle {
+    font-size: 1rem;
+    padding: 10px 18px;
+    color: #ffd700;
+    background: none;
+    border: none;
+    outline: none;
+    width: 100%;
+    text-align: left;
+    transition: background 0.2s;
+  }
+  .zone-group-toggle:hover {
+    background: #444;
+  }
+  .zone-group > a {
+    padding: 8px 28px;
+    font-size: 1rem;
+  }
+  .zone-group a {
+    padding: 8px 28px;
+    font-size: 0.97rem;
+  }
+  .zone-group ul {
+    padding-left: 0;
+  }
+  .zone-group li {
+    margin: 0;
+    padding: 0;
   }
 }
 

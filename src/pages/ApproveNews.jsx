@@ -16,6 +16,8 @@ const ApproveNews = () => {
   const [editRegion, setEditRegion] = useState("");
   const [editImageFile, setEditImageFile] = useState(null);
   const [editVideoFile, setEditVideoFile] = useState(null);
+  const [editZone, setEditZone] = useState("");
+  const [editSubzone, setEditSubzone] = useState("");
     // Edit handler for superadmin
     const handleEdit = (news) => {
       setEditingId(news.id);
@@ -25,6 +27,8 @@ const ApproveNews = () => {
       setEditCategory(news.category);
       setEditCustomCategory(news.category === "Other" ? news.category : "");
       setEditRegion(news.region);
+      setEditZone(news.zone || "");
+      setEditSubzone(news.subzone || "");
       setEditImageFile(null);
       setEditVideoFile(null);
       setActionMsg("");
@@ -41,6 +45,8 @@ const ApproveNews = () => {
         formData.append("content", editContent);
         formData.append("category", editCategory === "Other" ? editCustomCategory : editCategory);
         formData.append("region", editRegion);
+        formData.append("zone", editZone);
+        formData.append("subzone", editSubzone);
         if (editImageFile) formData.append("image", editImageFile);
         if (editVideoFile) formData.append("video", editVideoFile);
         const res = await fetch(`${apiUrl}/api/news/${editingId}`, {
@@ -58,6 +64,8 @@ const ApproveNews = () => {
         setEditContent("");
         setEditCategory("");
         setEditRegion("");
+        setEditZone("");
+        setEditSubzone("");
         setEditImageFile(null);
         setEditVideoFile(null);
       } catch (err) {
@@ -69,6 +77,14 @@ const ApproveNews = () => {
   const [error, setError] = useState("");
   const [actionMsg, setActionMsg] = useState("");
   const [token, setToken] = useState(localStorage.getItem("adminToken") || "");
+
+  // On mount, check for token in localStorage
+  useEffect(() => {
+    const storedToken = localStorage.getItem("adminToken");
+    if (storedToken && !token) {
+      setToken(storedToken);
+    }
+  }, []);
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -229,10 +245,15 @@ const ApproveNews = () => {
     );
   }
 
+  const handleLogout = () => {
+    setToken("");
+    localStorage.removeItem("adminToken");
+  };
+
   return (
     <div className="admin-root">
       <main className="admin-dashboard">
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, alignItems: "center" }}>
           <label>
             {t("selectLanguage")}
             <select value={language} onChange={e => setLanguage(e.target.value)} style={{ marginLeft: 8 }}>
@@ -240,6 +261,9 @@ const ApproveNews = () => {
               <option value="fr">Français</option>
             </select>
           </label>
+          <button onClick={handleLogout} style={{marginLeft: 16, background: '#f44336', color: '#fff', border: 'none', padding: '6px 16px', borderRadius: 4, cursor: 'pointer'}}>
+            {t("logout") || "Logout"}
+          </button>
         </div>
         <h1>{t("dashboard")}: {t("approveNews")}</h1>
         <p style={{ textAlign: "center", color: "#888", marginBottom: 24 }}>{t("reviewApproveNews")}</p>
@@ -318,6 +342,73 @@ const ApproveNews = () => {
             <div className="modal-content">
               <h2>{t("editNews")}</h2>
               <form onSubmit={handleEditSubmit} className="admin-form">
+                <label>
+                  Zone
+                  <select value={editZone} onChange={e => { setEditZone(e.target.value); setEditSubzone(""); }}>
+                    <option value="">Select Zone</option>
+                    <option value="Africa">Africa</option>
+                    <option value="Europe">Europe</option>
+                    <option value="Middle East">Middle East</option>
+                    <option value="Asia-Pacific">Asia-Pacific</option>
+                    <option value="Americas">Americas</option>
+                    <option value="Opinions">Opinions</option>
+                  </select>
+                </label>
+                {editZone === "Africa" && (
+                  <label>
+                    Subzone
+                    <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
+                      <option value="">Select Subzone</option>
+                      <option value="AES">AES</option>
+                      <option value="ECOWAS">ECOWAS</option>
+                      <option value="CEMAC">CEMAC</option>
+                      <option value="AU">AU</option>
+                    </select>
+                  </label>
+                )}
+                {editZone === "Europe" && (
+                  <label>
+                    Subzone
+                    <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
+                      <option value="">Select Subzone</option>
+                      <option value="EU">EU</option>
+                      <option value="France">France</option>
+                    </select>
+                  </label>
+                )}
+                {editZone === "Middle East" && (
+                  <label>
+                    Subzone
+                    <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
+                      <option value="">Select Subzone</option>
+                      <option value="Iran">Iran</option>
+                      <option value="Syria">Syria</option>
+                      <option value="Israel">Israel</option>
+                      <option value="Palestine">Palestine</option>
+                    </select>
+                  </label>
+                )}
+                {editZone === "Asia-Pacific" && (
+                  <label>
+                    Subzone
+                    <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
+                      <option value="">Select Subzone</option>
+                      <option value="China">China</option>
+                      <option value="North Korea">North Korea</option>
+                      <option value="Afghanistan">Afghanistan</option>
+                    </select>
+                  </label>
+                )}
+                {editZone === "Americas" && (
+                  <label>
+                    Subzone
+                    <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
+                      <option value="">Select Subzone</option>
+                      <option value="United States">United States</option>
+                      <option value="Venezuela">Venezuela</option>
+                    </select>
+                  </label>
+                )}
                 <label>
                   {t("title")}
                   <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)} required />

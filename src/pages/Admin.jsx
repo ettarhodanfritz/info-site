@@ -11,6 +11,8 @@ const Admin = () => {
   const [category, setCategory] = useState("Politics");
   const [customCategory, setCustomCategory] = useState("");
   const [region, setRegion] = useState("Africa");
+  const [zone, setZone] = useState("");
+  const [subzone, setSubzone] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const [message, setMessage] = useState("");
@@ -35,6 +37,11 @@ const Admin = () => {
   };
 
   useEffect(() => {
+    // On mount, check for token in localStorage
+    const storedToken = localStorage.getItem("adminToken");
+    if (storedToken && !token) {
+      setToken(storedToken);
+    }
     if (token) fetchNews();
   }, [token]);
 
@@ -49,6 +56,20 @@ const Admin = () => {
     formData.append("description", description);
     formData.append("content", content);
     formData.append("region", region);
+    formData.append("zone", zone);
+    // Only append subzone if zone requires it and subzone is not empty
+    const zonesWithSubzones = [
+      "africa",
+      "europe",
+      "middleEast",
+      "asiaPacific",
+      "americas",
+    ];
+    if (zonesWithSubzones.includes(zone) && subzone) {
+      formData.append("subzone", subzone);
+    } else if (zone === "opinions") {
+      formData.append("subzone", "opinions");
+    }
     if (imageFile) formData.append("image", imageFile);
     if (videoFile) formData.append("video", videoFile);
 
@@ -209,14 +230,20 @@ const Admin = () => {
     );
   }
 
+  const handleLogout = () => {
+    setToken("");
+    localStorage.removeItem("adminToken");
+  };
+
   return (
     <div className="admin-root">
       <main className="admin-dashboard">
         <div
           style={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             marginBottom: 10,
+            alignItems: "center",
           }}
         >
           <label>
@@ -230,12 +257,114 @@ const Admin = () => {
               <option value="fr">Français</option>
             </select>
           </label>
+          <button
+            onClick={handleLogout}
+            style={{
+              marginLeft: 16,
+              background: "#f44336",
+              color: "#fff",
+              border: "none",
+              padding: "6px 16px",
+              borderRadius: 4,
+              cursor: "pointer",
+            }}
+          >
+            {t("logout") || "Logout"}
+          </button>
         </div>
         <h1>{t("dashboard")}</h1>
         <p>{t("uploadEditDelete")}</p>
         {message && <p className="message">{message}</p>}
 
         <form className="admin-form" onSubmit={handleSubmit}>
+          <label>
+            {t("zones")}
+            <select
+              value={zone}
+              onChange={(e) => {
+                setZone(e.target.value);
+                setSubzone("");
+              }}
+            >
+              <option value="">{t("selectZone")}</option>
+              <option value="africa">{t("africa")}</option>
+              <option value="europe">{t("europe")}</option>
+              <option value="middleEast">{t("middleEast")}</option>
+              <option value="asiaPacific">{t("asiaPacific")}</option>
+              <option value="americas">{t("americas")}</option>
+              <option value="opinions">{t("opinions")}</option>
+            </select>
+          </label>
+          {zone === "africa" && (
+            <label>
+              {t("selectSubzone")}
+              <select
+                value={subzone}
+                onChange={(e) => setSubzone(e.target.value)}
+              >
+                <option value="">{t("selectSubzone")}</option>
+                <option value="aes">{t("aes")}</option>
+                <option value="ecowas">{t("ecowas")}</option>
+                <option value="cemac">{t("cemac")}</option>
+                <option value="au">{t("au")}</option>
+              </select>
+            </label>
+          )}
+          {zone === "europe" && (
+            <label>
+              {t("selectSubzone")}
+              <select
+                value={subzone}
+                onChange={(e) => setSubzone(e.target.value)}
+              >
+                <option value="">{t("selectSubzone")}</option>
+                <option value="eu">{t("eu")}</option>
+                <option value="france">{t("france")}</option>
+              </select>
+            </label>
+          )}
+          {zone === "middleEast" && (
+            <label>
+              {t("selectSubzone")}
+              <select
+                value={subzone}
+                onChange={(e) => setSubzone(e.target.value)}
+              >
+                <option value="">{t("selectSubzone")}</option>
+                <option value="iran">{t("iran")}</option>
+                <option value="syria">{t("syria")}</option>
+                <option value="israel">{t("israel")}</option>
+                <option value="palestine">{t("palestine")}</option>
+              </select>
+            </label>
+          )}
+          {zone === "asiaPacific" && (
+            <label>
+              {t("selectSubzone")}
+              <select
+                value={subzone}
+                onChange={(e) => setSubzone(e.target.value)}
+              >
+                <option value="">{t("selectSubzone")}</option>
+                <option value="china">{t("china")}</option>
+                <option value="northKorea">{t("northKorea")}</option>
+                <option value="afghanistan">{t("afghanistan")}</option>
+              </select>
+            </label>
+          )}
+          {zone === "americas" && (
+            <label>
+              {t("selectSubzone")}
+              <select
+                value={subzone}
+                onChange={(e) => setSubzone(e.target.value)}
+              >
+                <option value="">{t("selectSubzone")}</option>
+                <option value="unitedStates">{t("unitedStates")}</option>
+                <option value="venezuela">{t("venezuela")}</option>
+              </select>
+            </label>
+          )}
           <label>
             {t("title")}
             <input
@@ -324,6 +453,8 @@ const Admin = () => {
             <div key={news.id} className="news-item">
               <p>
                 <strong>{news.title}</strong> ({news.region})
+                {news.zone && <span> | Zone: {news.zone}</span>}
+                {news.subzone && <span> | Subzone: {news.subzone}</span>}
               </p>
               <div className="news-actions">
                 <button onClick={() => handleEdit(news)}>{t("edit")}</button>

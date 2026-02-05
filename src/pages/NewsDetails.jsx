@@ -45,6 +45,8 @@ const NewsDetails = () => {
       <h1>{news.title}</h1>
       <p className="news-meta">
         {new Date(news.date).toLocaleDateString()} • {news.category}
+        {news.zone && <span> • Zone: {news.zone}</span>}
+        {news.subzone && <span> • Subzone: {news.subzone}</span>}
       </p>
 
       {news.imageUrl && (

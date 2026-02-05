@@ -8,7 +8,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 
-// Create news table if not exists (now includes 'approved' column)
+// Create news table if not exists (now includes 'zone' and 'subzone' columns)
 db.run(
   `CREATE TABLE IF NOT EXISTS news (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,6 +18,8 @@ db.run(
     category TEXT,
     date TEXT,
     region TEXT,
+    zone TEXT,
+    subzone TEXT,
     imageUrl TEXT,
     videoUrl TEXT,
     approved INTEGER DEFAULT 0

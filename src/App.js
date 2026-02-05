@@ -81,6 +81,8 @@ const AppWrapper = () => {
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<News />} />
         <Route path="/news/:id" element={<NewsDetails />} />
+        <Route path="/zone/:zone" element={<News />} />
+        <Route path="/zone/:zone/:subzone" element={<News />} />
         <Route path="/live" element={<LiveTv />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/admin" element={<Admin />} />

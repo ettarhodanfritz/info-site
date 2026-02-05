@@ -58,8 +58,8 @@ const News = {
     new Promise((resolve, reject) => {
       const sql = `
         INSERT INTO news
-        (title, description, content, category, date, region, imageUrl, videoUrl)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        (title, description, content, category, date, region, zone, subzone, imageUrl, videoUrl)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       const params = [
         data.title,
@@ -68,6 +68,8 @@ const News = {
         data.category,
         data.date || new Date().toISOString(),
         data.region,
+        data.zone,
+        data.subzone,
         data.imageUrl,
         data.videoUrl,
       ];
@@ -82,7 +84,7 @@ const News = {
     new Promise((resolve, reject) => {
       const sql = `
         UPDATE news SET
-        title = ?, description = ?, content = ?, category = ?, region = ?, imageUrl = ?, videoUrl = ?
+        title = ?, description = ?, content = ?, category = ?, region = ?, zone = ?, subzone = ?, imageUrl = ?, videoUrl = ?
         WHERE id = ?
       `;
       const params = [
@@ -91,6 +93,8 @@ const News = {
         data.content,
         data.category,
         data.region,
+        data.zone,
+        data.subzone,
         data.imageUrl,
         data.videoUrl,
         id,

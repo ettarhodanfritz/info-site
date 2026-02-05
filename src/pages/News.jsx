@@ -1,13 +1,12 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "../App.css";
 // import "../Admin.css";
 import { useI18n } from "../i18n";
 
 const NewsCard = ({ news }) => {
   const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
-
   return (
     <article className="news-card-horizontal">
       {news.imageUrl && (
@@ -21,6 +20,8 @@ const NewsCard = ({ news }) => {
       <p>{news.description}</p>
       <p className="news-meta">
         {new Date(news.date).toLocaleDateString()} • {news.category}
+        {news.zone && <span> • Zone: {news.zone}</span>}
+        {news.subzone && <span> • Subzone: {news.subzone}</span>}
       </p>
       {/* Video is only shown on the details page */}
       <Link to={`/news/${news.id}`}>Read More</Link>
@@ -71,39 +72,39 @@ async function translateText(text, targetLang, sourceLang = "auto") {
 
 const News = () => {
   const { t, language } = useI18n();
-  const [africaNews, setAfricaNews] = React.useState([]);
-  const [worldNews, setWorldNews] = React.useState([]);
-  const [originalAfricaNews, setOriginalAfricaNews] = React.useState([]);
-  const [originalWorldNews, setOriginalWorldNews] = React.useState([]);
+  const { zone, subzone } = useParams();
+  const [newsList, setNewsList] = React.useState([]);
+  const [originalNewsList, setOriginalNewsList] = React.useState([]);
   const [lastTranslatedLang, setLastTranslatedLang] = React.useState("en");
   const [loading, setLoading] = React.useState(false);
 
-  // Fetch news on mount
+  // Fetch news on mount or when zone/subzone changes
   React.useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
-    fetch(`${apiUrl}/api/news/africa`)
+    // Convert dashes to spaces for backend filtering
+    const zoneParam = zone ? zone.replace(/-/g, " ") : undefined;
+    const subzoneParam = subzone ? subzone.replace(/-/g, " ") : undefined;
+    let url = `${apiUrl}/api/news`;
+    if (zoneParam && subzoneParam) {
+      url = `${apiUrl}/api/news/zone/${encodeURIComponent(zoneParam)}/${encodeURIComponent(subzoneParam)}`;
+    } else if (zoneParam) {
+      url = `${apiUrl}/api/news/zone/${encodeURIComponent(zoneParam)}`;
+    }
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        setAfricaNews(Array.isArray(data) ? data : []);
-        setOriginalAfricaNews(Array.isArray(data) ? data : []);
+        setNewsList(Array.isArray(data) ? data : []);
+        setOriginalNewsList(Array.isArray(data) ? data : []);
       })
-      .catch((err) => { console.error(err); setAfricaNews([]); setOriginalAfricaNews([]); });
-    fetch(`${apiUrl}/api/news/world`)
-      .then((res) => res.json())
-      .then((data) => {
-        setWorldNews(Array.isArray(data) ? data : []);
-        setOriginalWorldNews(Array.isArray(data) ? data : []);
-      })
-      .catch((err) => { console.error(err); setWorldNews([]); setOriginalWorldNews([]); });
+      .catch((err) => { console.error(err); setNewsList([]); setOriginalNewsList([]); });
     setLastTranslatedLang("en");
-  }, []);
+  }, [zone, subzone]);
 
   // Translate news when language changes
   React.useEffect(() => {
     if (language === lastTranslatedLang) return;
     if (language === "en") {
-      setAfricaNews(originalAfricaNews);
-      setWorldNews(originalWorldNews);
+      setNewsList(originalNewsList);
       setLastTranslatedLang("en");
       return;
     }
@@ -114,26 +115,27 @@ const News = () => {
         title: await translateText(item.title, language),
         description: await translateText(item.description, language),
       })));
-      setAfricaNews(await translateArr(originalAfricaNews));
-      setWorldNews(await translateArr(originalWorldNews));
+      setNewsList(await translateArr(originalNewsList));
       setLastTranslatedLang(language);
       setLoading(false);
     };
-    if (originalAfricaNews.length || originalWorldNews.length) doTranslate();
+    if (originalNewsList.length) doTranslate();
     // eslint-disable-next-line
-  }, [language, originalAfricaNews, originalWorldNews, lastTranslatedLang]);
+  }, [language, originalNewsList, lastTranslatedLang]);
+
+  // Filter by zone/subzone if present in route
+  // No need to filter here, backend already filters
+  const filteredNews = newsList;
 
   return (
     <main>
       {loading && <p>Translating news...</p>}
-      <section className="news-section" id="africa-news">
-        <h2>{t("news") + " - Africa"}</h2>
-        <ScrollableNews newsArray={africaNews} />
-      </section>
-
-      <section className="news-section" id="world-news">
-        <h2>{t("news") + " - World"}</h2>
-        <ScrollableNews newsArray={worldNews} />
+      <section className="news-section" id="filtered-news">
+        <h2>
+          {zone ? `${t("news")} - ${zone.charAt(0).toUpperCase() + zone.slice(1)}` : t("news")}
+          {subzone ? ` (${subzone.charAt(0).toUpperCase() + subzone.slice(1)})` : ""}
+        </h2>
+        <ScrollableNews newsArray={filteredNews} />
       </section>
     </main>
   );

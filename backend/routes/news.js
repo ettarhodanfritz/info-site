@@ -1,6 +1,11 @@
-// backend/routes/news.js
 const express = require("express");
 const router = express.Router();
+// ...existing code...
+// Simple test route for connectivity
+router.get("/test", (req, res) => {
+  console.log("GET /api/news/test hit at", new Date().toISOString());
+  res.json({ message: "Backend test route working!" });
+});
 const News = require("../models/News");
 const multer = require("multer");
 const path = require("path");
@@ -19,6 +24,48 @@ const storage = multer.diskStorage({
 });
 
 const parser = multer({ storage });
+
+// ------------------- GET ROUTES -------------------
+// Get news by zone (case-insensitive, dashes/spaces tolerant)
+router.get("/zone/:zone", async (req, res) => {
+  try {
+    const zoneParam = req.params.zone.toLowerCase().replace(/-/g, " ").trim();
+    const news = await News.getAll(true);
+    const filtered = news.filter(n =>
+      n.zone && n.zone.toLowerCase().replace(/-/g, " ").trim() === zoneParam
+    );
+    res.json(filtered);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Get news by zone and subzone (case-insensitive, dashes/spaces tolerant)
+router.get("/zone/:zone/:subzone", async (req, res) => {
+  try {
+    const zoneParam = req.params.zone.toLowerCase().replace(/-/g, " ").trim();
+    const subzoneParam = req.params.subzone.toLowerCase().replace(/-/g, " ").trim();
+    const news = await News.getAll(true);
+    const filtered = news.filter(n =>
+      n.zone && n.zone.toLowerCase().replace(/-/g, " ").trim() === zoneParam &&
+      n.subzone && n.subzone.toLowerCase().replace(/-/g, " ").trim() === subzoneParam
+    );
+    res.json(filtered);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+// Only show approved news to public
+router.get("/", async (req, res) => {
+  try {
+    const news = await News.getAll(true);
+    res.json(news);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ...existing code...
 
 // ------------------- GET ROUTES -------------------
 // Only show approved news to public
@@ -96,11 +143,45 @@ router.post(
   authenticateAdmin,
   parser.fields([{ name: "image" }, { name: "video" }]),
   async (req, res) => {
+    console.log("=== Incoming POST /api/news ===");
+    console.log("Time:", new Date().toISOString());
+    console.log("Headers:", req.headers);
+    console.log("Files received:", req.files);
+    console.log("Body received:", req.body);
     try {
-      console.log("--- POST /api/news ---");
-      console.log("Headers:", req.headers);
-      console.log("Files received:", req.files);
-      console.log("Body received:", req.body);
+
+      const requiredFields = [
+        "title",
+        "description",
+        "content",
+        "category",
+        "region",
+        "zone"
+      ];
+      const missing = requiredFields.filter(f => !req.body[f] || req.body[f].trim() === "");
+      if (missing.length > 0) {
+        return res.status(400).json({ message: `Missing required fields: ${missing.join(", ")}` });
+      }
+
+      // Only require subzone for zones that have subzones
+      const zonesWithSubzones = [
+        "africa", "europe", "middleeast", "asiapacific", "americas"
+      ];
+      // Normalize zone for comparison (lowercase, no spaces/dashes)
+      const zoneKey = (req.body.zone || "").toLowerCase().replace(/ |-/g, "");
+      if (zonesWithSubzones.includes(zoneKey)) {
+        if (!req.body.subzone || req.body.subzone.trim() === "") {
+          // Special case: if zone is 'opinions', set subzone to 'opinions' for peace
+          if (zoneKey === "opinions") {
+            req.body.subzone = "opinions";
+          } else {
+            return res.status(400).json({ message: "Missing required field: subzone" });
+          }
+        }
+      } else {
+        // For zones without subzones, ensure subzone is undefined or empty string
+        req.body.subzone = "";
+      }
 
       const imageUrl = req.files?.image?.[0]?.path.replace(/\\/g, "/") || "";
       const videoUrl = req.files?.video?.[0]?.path.replace(/\\/g, "/") || "";

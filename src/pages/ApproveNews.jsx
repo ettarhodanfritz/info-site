@@ -84,6 +84,7 @@ const ApproveNews = () => {
     if (storedToken && !token) {
       setToken(storedToken);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
+import { useI18n } from "../i18n";
 
 const Videos = () => {
+  const { t } = useI18n();
   const [videoNews, setVideoNews] = useState([]);
   const apiUrl = process.env.REACT_APP_API_URL || "https://info-site-4.onrender.com";
 
@@ -17,15 +19,15 @@ const Videos = () => {
 
   return (
     <main className="news-details animate-in slide-left">
-      <h2>Videos</h2>
+      <h2>{t("videos")}</h2>
       <section className="videos-section">
-        {videoNews.length === 0 && <p>No videos found.</p>}
+        {videoNews.length === 0 && <p>{t("noVideosFound")}</p>}
         {videoNews.map(news => (
           <div key={news.id} className="video-card animate-in slide-left">
-            <h1>{news.title}</h1>
+            <h1>{t(news.title)}</h1>
             <p className="news-meta">
-              {news.zone && <span>Zone: {news.zone}</span>}
-              {news.subzone && <span> | Subzone: {news.subzone}</span>}
+              {news.zone && <span>{t(news.zone)}</span>}
+              {news.subzone && <span> | {t(news.subzone)}</span>}
             </p>
             {news.videoUrl && (
               <video
@@ -33,7 +35,7 @@ const Videos = () => {
                 style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
               >
                 <source src={`${apiUrl}/${news.videoUrl}`} type="video/mp4" />
-                Your browser does not support the video tag.
+                {t("videoNotSupported")}
               </video>
             )}
           </div>

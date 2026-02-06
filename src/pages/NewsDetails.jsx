@@ -40,16 +40,16 @@ const NewsDetails = () => {
 
   return (
     <main className="news-details animate-in slide-left">
-      <h1>{news.title}</h1>
+      <h1>{t(news.title)}</h1>
       <p className="news-meta">
-        {new Date(news.date).toLocaleDateString()} • {news.category}
-        {news.zone && <span> • Zone: {news.zone}</span>}
-        {news.subzone && <span> • Subzone: {news.subzone}</span>}
+        {news.date && <span>{new Date(news.date).toLocaleDateString()}</span>} • {news.category && t(news.category)}
+        {news.zone && <span> • {t(news.zone)}</span>}
+        {news.subzone && <span> • {t(news.subzone)}</span>}
       </p>
       {news.imageUrl && (
         <img
           src={`${apiUrl}/${news.imageUrl}`}
-          alt={news.title}
+          alt={t(news.title)}
           style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
         />
       )}
@@ -61,7 +61,7 @@ const NewsDetails = () => {
           <source src={`${apiUrl}/${news.videoUrl}`} type="video/mp4" />
         </video>
       )}
-      <p>{news.content}</p>
+      <p>{t(news.content)}</p>
       <Link to="/news" style={{ display: "inline-block", marginTop: "20px" }}>
         {t("news")}
       </Link>

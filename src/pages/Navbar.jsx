@@ -1,115 +1,106 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../App.css";
 import { useI18n } from "../i18n";
+import zonesData from "../locales/zonesData";
 
-const zonesData = [
-  { zone: "africa", subzones: ["aes", "ecowas", "cemac", "au"] },
-  { zone: "europe", subzones: ["eu", "france"] },
-  { zone: "middleEast", subzones: ["iran", "syria", "israel", "palestine"] },
-  { zone: "asiaPacific", subzones: ["china", "northKorea", "afghanistan"] },
-  { zone: "americas", subzones: ["unitedStates", "venezuela"] },
-];
-
-function ZoneGroup({ zone, subzones, setMenuOpen, t }) {
-  const [open, setOpen] = React.useState(false);
-  return (
-    <li className="zone-group">
-      <span
-        className="zone-group-toggle"
-        onClick={() => setOpen((o) => !o)}
-        style={{
-          cursor: "pointer",
-          fontWeight: "bold",
-          color: "#ffd700",
-          display: "block",
-          padding: "8px 24px",
-        }}
-      >
-        {t(zone)}{" "}
-        <span style={{ float: "right", fontWeight: "normal" }}>
-          {open ? "▲" : "▼"}
-        </span>
-      </span>
-      <Link
-        to={`/zone/${zone.toLowerCase().replace(/ /g, "-")}`}
-        style={{ display: "block", paddingLeft: 40, color: "#fff" }}
-        onClick={() => setMenuOpen(false)}
-      >
-        {t("allZone").replace("{zone}", t(zone))}
-      </Link>
-      {open && (
-        <ul style={{ paddingLeft: 0 }}>
-          {subzones.map((sub) => (
-            <li key={sub}>
-              <Link
-                to={`/zone/${zone.toLowerCase().replace(/ /g, "-")}/${sub.toLowerCase().replace(/ /g, "-")}`}
-                style={{ paddingLeft: 40, color: "#b0c4de", display: "block" }}
-                onClick={() => setMenuOpen(false)}
-              >
-                {t(sub)}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </li>
-  );
-}
 const Navbar = () => {
   const { language, setLanguage, t } = useI18n();
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const [newsDropdownOpen, setNewsDropdownOpen] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+  const newsDropdownRef = React.useRef();
+  const newsToggleRef = React.useRef();
 
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Close News dropdown on outside click
+  React.useEffect(() => {
+    if (!newsDropdownOpen) return;
+    function handleClick(e) {
+      if (
+        newsDropdownRef.current &&
+        !newsDropdownRef.current.contains(e.target) &&
+        newsToggleRef.current &&
+        !newsToggleRef.current.contains(e.target)
+      ) {
+        setNewsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [newsDropdownOpen]);
+
+  // Helper to close News dropdown from child
+  window.closeNewsDropdown = () => setNewsDropdownOpen(false);
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <div
-          className={`hamburger ${menuOpen ? "open" : ""}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
+        <div className="navbar-logo">
+          <Link to="/">
+            <img src="/images/logo.PNG" alt="Afrique Internationale" />
+          </Link>
         </div>
-        <ul className={`navbar-menu ${menuOpen ? "show" : ""}`}>
-          <li>
-            <Link to="/" onClick={() => setMenuOpen(false)}>
-              {t("home")}
-            </Link>
-          </li>
-          <li>
-            <Link to="/news" onClick={() => setMenuOpen(false)}>
+        <ul className={`navbar-menu ${menuOpen || !isMobile ? "show" : ""}`} style={isMobile ? { position: 'absolute', top: 60, right: 20, zIndex: 2000, background: '#222', borderRadius: 8, width: 200, flexDirection: 'column', padding: 0 } : {}}>
+          {/* News dropdown with zones, subzones, opinions */}
+          <li className="navbar-news dropdown" style={{ position: isMobile ? 'relative' : 'relative', width: '100%' }}>
+            <span
+              className="dropdown-toggle"
+              ref={newsToggleRef}
+              onClick={() => setNewsDropdownOpen((open) => !open)}
+              style={{ cursor: "pointer", color: isMobile ? '#fff' : undefined, fontWeight: isMobile ? 'bold' : undefined, display: 'block', padding: isMobile ? '10px 20px' : undefined, width: '100%' }}
+            >
               {t("news")}
-            </Link>
+              <span style={{ marginLeft: 8 }}>{newsDropdownOpen ? "▲" : "▼"}</span>
+            </span>
+            {newsDropdownOpen && (
+              <ul
+                ref={newsDropdownRef}
+                className={`dropdown-menu compact-zones show`}
+                style={
+                  isMobile
+                    ? { position: 'absolute', left: 0, top: '100%', width: '100%', background: '#222', boxShadow: '0 8px 24px rgba(0,0,0,0.18)', borderRadius: '0 0 8px 8px', zIndex: 3000, padding: 0, margin: 0, display: 'flex', flexDirection: 'column' }
+                    : { position: 'absolute', left: 0, top: '100%', zIndex: 1200, minWidth: 220, background: '#222', borderRadius: '0 0 8px 8px', boxShadow: '0 8px 24px rgba(0,0,0,0.18)', padding: 10, margin: 0, display: 'flex', flexDirection: 'column' }
+                }
+              >
+                {zonesData.map((z) => (
+                  <ZoneGroup
+                    key={z.zone}
+                    zone={z.zone}
+                    subzones={z.subzones}
+                    setMenuOpen={setMenuOpen}
+                    t={t}
+                  />
+                ))}
+                <li>
+                  <Link to="/zone/opinions" onClick={() => {
+                    setMenuOpen(false);
+                    setNewsDropdownOpen(false);
+                  }} style={isMobile ? { color: '#ffd700', fontWeight: 'bold', display: 'block', padding: '10px 20px' } : {}}>
+                    {t("opinions")}
+                  </Link>
+                </li>
+              </ul>
+            )}
           </li>
+          {/* Live */}
           <li>
             <Link to="/live" onClick={() => setMenuOpen(false)}>
               {t("liveTv")}
             </Link>
           </li>
           <li>
+            <Link to="/videos" onClick={() => setMenuOpen(false)}>
+              {t("videos")}
+            </Link>
+          </li>
+          <li>
             <Link to="/contact" onClick={() => setMenuOpen(false)}>
               {t("contact")}
             </Link>
-          </li>
-          <li className="navbar-zones dropdown">
-            <span className="dropdown-toggle">{t("zones")}</span>
-            <ul className="dropdown-menu compact-zones">
-              {zonesData.map((z) => (
-                <ZoneGroup
-                  key={z.zone}
-                  zone={z.zone}
-                  subzones={z.subzones}
-                  setMenuOpen={setMenuOpen}
-                  t={t}
-                />
-              ))}
-              <li>
-                <Link to="/zone/opinions" onClick={() => setMenuOpen(false)}>
-                  <strong>{t("opinions")}</strong>
-                </Link>
-              </li>
-            </ul>
           </li>
           <li className="navbar-lang">
             <button
@@ -126,14 +117,53 @@ const Navbar = () => {
             </button>
           </li>
         </ul>
-        <div className="navbar-logo navbar-logo-right">
-          <Link to="/">
-            <img src="/images/logo.PNG" alt="Afrique Internationale" />
-          </Link>
+        <div
+          className={`hamburger ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
       </div>
     </nav>
   );
-};
+}
 
 export default Navbar;
+
+// Ensure ZoneGroup is defined above Navbar and not inside Navbar
+const ZoneGroup = ({ zone, subzones, setMenuOpen, t }) => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <li className="zone-group">
+      <div>
+        <span
+          className="zone-group-toggle"
+          onClick={() => setOpen((o) => !o)}
+          style={{ cursor: "pointer", fontWeight: "bold", color: "#fff", display: "block", padding: "8px 24px" }}
+        >
+          {t(zone)}{" "}
+          <span style={{ float: "right", fontWeight: "normal" }}>
+            {open ? "▲" : "▼"}
+          </span>
+        </span>
+        {open && (
+          <ul style={{ paddingLeft: 0 }}>
+            {subzones.map((sub) => (
+              <li key={sub}>
+                <Link
+                  to={`/zone/${zone.toLowerCase().replace(/ /g, "-")}/${sub.toLowerCase().replace(/ /g, "-")}`}
+                  style={{ paddingLeft: 40, color: "#b0c4de", display: "block" }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {t(sub)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </li>
+  );
+};

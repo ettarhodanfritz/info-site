@@ -16,6 +16,7 @@ import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 import NewsDetails from "./pages/NewsDetails";
 import ApproveNews from "./pages/ApproveNews";
+import Videos from "./pages/Videos";
 
 // Components
 import Navbar from "./pages/Navbar";
@@ -87,6 +88,7 @@ const AppWrapper = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/approve-news" element={<ApproveNews />} />
+        <Route path="/videos" element={<Videos />} />
         {/* Admin completely isolated */}
       </Routes>
 

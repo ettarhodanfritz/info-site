@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "../App.css";
@@ -41,14 +40,12 @@ const NewsDetails = () => {
 
   return (
     <main className="news-details animate-in slide-left">
-      {/* Removed translating indicator as translating is not defined */}
       <h1>{news.title}</h1>
       <p className="news-meta">
         {new Date(news.date).toLocaleDateString()} • {news.category}
         {news.zone && <span> • Zone: {news.zone}</span>}
         {news.subzone && <span> • Subzone: {news.subzone}</span>}
       </p>
-
       {news.imageUrl && (
         <img
           src={`${apiUrl}/${news.imageUrl}`}
@@ -56,7 +53,6 @@ const NewsDetails = () => {
           style={{ width: "100%", borderRadius: "12px", marginBottom: "20px" }}
         />
       )}
-
       {news.videoUrl && (
         <video
           controls
@@ -65,9 +61,7 @@ const NewsDetails = () => {
           <source src={`${apiUrl}/${news.videoUrl}`} type="video/mp4" />
         </video>
       )}
-
       <p>{news.content}</p>
-
       <Link to="/news" style={{ display: "inline-block", marginTop: "20px" }}>
         {t("news")}
       </Link>

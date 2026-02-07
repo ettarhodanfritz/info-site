@@ -344,69 +344,69 @@ const ApproveNews = () => {
               <h2>{t("editNews")}</h2>
               <form onSubmit={handleEditSubmit} className="admin-form">
                 <label>
-                  Zone
+                  {t("zone")}
                   <select value={editZone} onChange={e => { setEditZone(e.target.value); setEditSubzone(""); }}>
-                    <option value="">Select Zone</option>
-                    <option value="Africa">Africa</option>
-                    <option value="Europe">Europe</option>
-                    <option value="Middle East">Middle East</option>
-                    <option value="Asia-Pacific">Asia-Pacific</option>
-                    <option value="Americas">Americas</option>
-                    <option value="Opinions">Opinions</option>
+                    <option value="">{t("selectZone")}</option>
+                    <option value="Africa">{t("africa")}</option>
+                    <option value="Europe">{t("europe")}</option>
+                    <option value="Middle East">{t("middleEast")}</option>
+                    <option value="Asia-Pacific">{t("asiaPacific")}</option>
+                    <option value="Americas">{t("americas")}</option>
+                    <option value="Opinions">{t("opinions")}</option>
                   </select>
                 </label>
                 {editZone === "Africa" && (
                   <label>
-                    Subzone
+                    {t("subzone")}
                     <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
-                      <option value="">Select Subzone</option>
-                      <option value="AES">AES</option>
-                      <option value="ECOWAS">ECOWAS</option>
-                      <option value="CEMAC">CEMAC</option>
-                      <option value="AU">AU</option>
+                      <option value="">{t("selectSubzone")}</option>
+                      <option value="AES">{t("aes")}</option>
+                      <option value="ECOWAS">{t("ecowas")}</option>
+                      <option value="CEMAC">{t("cemac")}</option>
+                      <option value="AU">{t("au")}</option>
                     </select>
                   </label>
                 )}
                 {editZone === "Europe" && (
                   <label>
-                    Subzone
+                    {t("subzone")}
                     <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
-                      <option value="">Select Subzone</option>
-                      <option value="EU">EU</option>
-                      <option value="France">France</option>
+                      <option value="">{t("selectSubzone")}</option>
+                      <option value="EU">{t("eu")}</option>
+                      <option value="France">{t("france")}</option>
                     </select>
                   </label>
                 )}
                 {editZone === "Middle East" && (
                   <label>
-                    Subzone
+                    {t("subzone")}
                     <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
-                      <option value="">Select Subzone</option>
-                      <option value="Iran">Iran</option>
-                      <option value="Syria">Syria</option>
-                      <option value="Israel">Israel</option>
-                      <option value="Palestine">Palestine</option>
+                      <option value="">{t("selectSubzone")}</option>
+                      <option value="Iran">{t("iran")}</option>
+                      <option value="Syria">{t("syria")}</option>
+                      <option value="Israel">{t("israel")}</option>
+                      <option value="Palestine">{t("palestine")}</option>
                     </select>
                   </label>
                 )}
                 {editZone === "Asia-Pacific" && (
                   <label>
-                    Subzone
+                    {t("subzone")}
                     <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
-                      <option value="">Select Subzone</option>
-                      <option value="China">China</option>
-                      <option value="North Korea">North Korea</option>
-                      <option value="Afghanistan">Afghanistan</option>
+                      <option value="">{t("selectSubzone")}</option>
+                      <option value="China">{t("china")}</option>
+                      <option value="North Korea">{t("northKorea")}</option>
+                      <option value="Afghanistan">{t("afghanistan")}</option>
                     </select>
                   </label>
                 )}
                 {editZone === "Americas" && (
                   <label>
-                    Subzone
+                    {t("subzone")}
                     <select value={editSubzone} onChange={e => setEditSubzone(e.target.value)}>
-                      <option value="">Select Subzone</option>
-                      <option value="United States">United States</option>
-                      <option value="Venezuela">Venezuela</option>
+                      <option value="">{t("selectSubzone")}</option>
+                      <option value="United States">{t("unitedStates")}</option>
+                      <option value="Venezuela">{t("venezuela")}</option>
                     </select>
                   </label>
                 )}

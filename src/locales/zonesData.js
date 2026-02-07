@@ -1,26 +1,26 @@
 const zonesData = [
   {
-    zone: "Africa",
-    subzones: ["AES", "ECOWAS", "CEMAC", "AU"]
+    zone: "africa",
+    subzones: ["aes", "ecowas", "cemac", "au"]
   },
   {
-    zone: "Europe",
-    subzones: ["EU", "France"]
+    zone: "europe",
+    subzones: ["eu", "france"]
   },
   {
-    zone: "Middle East",
-    subzones: ["Iran", "Syria", "Israel", "Palestine"]
+    zone: "middleEast",
+    subzones: ["iran", "syria", "israel", "palestine"]
   },
   {
-    zone: "Asia-Pacific",
-    subzones: ["China", "North Korea", "Afghanistan"]
+    zone: "asiaPacific",
+    subzones: ["china", "northKorea", "afghanistan"]
   },
   {
-    zone: "Americas",
-    subzones: ["United States", "Venezuela"]
+    zone: "americas",
+    subzones: ["unitedStates", "venezuela"]
   },
   {
-    zone: "Opinions",
+    zone: "opinions",
     subzones: ["opinions"]
   }
 ];

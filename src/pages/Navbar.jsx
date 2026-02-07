@@ -75,14 +75,7 @@ const Navbar = () => {
                     t={t}
                   />
                 ))}
-                <li>
-                  <Link to="/zone/opinions" onClick={() => {
-                    setMenuOpen(false);
-                    setNewsDropdownOpen(false);
-                  }} style={isMobile ? { color: '#ffd700', fontWeight: 'bold', display: 'block', padding: '10px 20px' } : {}}>
-                    {t("opinions")}
-                  </Link>
-                </li>
+                
               </ul>
             )}
           </li>

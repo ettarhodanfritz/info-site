@@ -1,4 +1,4 @@
-  white-space: nowrap;
+/* ...existing code... */
 /* --- CLEAN NAVBAR POSITIONING (SINGLE SOURCE OF TRUTH) --- */
 .navbar-inner {
   display: flex;

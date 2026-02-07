@@ -128,6 +128,8 @@ export default Navbar;
 // Ensure ZoneGroup is defined above Navbar and not inside Navbar
 const ZoneGroup = ({ zone, subzones, setMenuOpen, t }) => {
   const [open, setOpen] = React.useState(false);
+  // Access the dropdown close function from window
+  const closeNewsDropdown = window.closeNewsDropdown || (() => {});
   return (
     <li className="zone-group">
       <div>
@@ -148,7 +150,10 @@ const ZoneGroup = ({ zone, subzones, setMenuOpen, t }) => {
                 <Link
                   to={`/zone/${zone.toLowerCase().replace(/ /g, "-")}/${sub.toLowerCase().replace(/ /g, "-")}`}
                   style={{ paddingLeft: 40, color: "#b0c4de", display: "block" }}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    closeNewsDropdown();
+                  }}
                 >
                   {t(sub)}
                 </Link>
